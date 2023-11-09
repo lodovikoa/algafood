@@ -1,5 +1,6 @@
 package com.algaworks.algafood.domain.model.service;
 
+import com.algaworks.algafood.domain.model.Cozinha;
 import com.algaworks.algafood.domain.model.Restaurante;
 import com.algaworks.algafood.domain.model.exception.EntidadeNaoEncontradaException;
 import com.algaworks.algafood.domain.model.repository.CozinhaRepository;
@@ -23,11 +24,10 @@ public class RestauranteService {
 
     public Restaurante salvar(Restaurante restaurante) {
         var cozinhaId = restaurante.getCozinha().getId();
-        var cozinha = cozinhaRepository.buscar(cozinhaId);
-
-        if(cozinha == null) {
-            throw new EntidadeNaoEncontradaException(String.format("Não foi encontrado cadastro de Cozinha com ID %d", cozinhaId));
-        }
+        Cozinha cozinha = cozinhaRepository.findById(cozinhaId)
+                .orElseThrow(() -> new EntidadeNaoEncontradaException(
+                        String.format("Não foi encontrado cadastro de Cozinha com ID %d", cozinhaId)
+                ));
 
         restaurante.setCozinha(cozinha);
         return restauranteRespository.salvar(restaurante);
