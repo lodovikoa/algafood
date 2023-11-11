@@ -30,17 +30,17 @@ public class RestauranteService {
                 ));
 
         restaurante.setCozinha(cozinha);
-        return restauranteRespository.salvar(restaurante);
+        return restauranteRespository.save(restaurante) ;
     }
 
     public Restaurante atualizarParcial(Long restauranteId, Map<String, Object> campos) {
-        var restauranteAtual = restauranteRespository.buscar(restauranteId);
-        if(restauranteAtual == null) {
+        var restauranteAtual = restauranteRespository.findById(restauranteId);
+        if(restauranteAtual.isEmpty()) {
             throw new EntidadeNaoEncontradaException(String.format("Não foi encontrado Restaurante com ID %d", restauranteId));
         }
 
-        merge(campos, restauranteAtual);
-        return salvar(restauranteAtual);
+        merge(campos, restauranteAtual.get());
+        return salvar(restauranteAtual.get());
     }
 
     private void merge(Map<String, Object> dadosOrigem, Restaurante restauranteDestino) {

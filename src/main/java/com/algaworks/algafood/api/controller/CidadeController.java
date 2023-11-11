@@ -27,10 +27,10 @@ public class CidadeController {
     @GetMapping("{cidadeId}")
     public ResponseEntity<Cidade> buscar(@PathVariable Long cidadeId) {
         var cidade = cidadeService.buscar(cidadeId);
-        if(cidade == null) {
-            return ResponseEntity.notFound().build();
+        if(cidade.isPresent()) {
+            return ResponseEntity.ok(cidade.get());
         }
-        return ResponseEntity.ok(cidade);
+        return ResponseEntity.notFound().build();
     }
 
     @PostMapping
@@ -47,10 +47,10 @@ public class CidadeController {
     public ResponseEntity<?> alterar(@PathVariable Long cidadeId, @RequestBody Cidade cidade) {
         try {
             var cidadeAtual = cidadeService.buscar(cidadeId);
-            if(cidadeAtual != null) {
-                BeanUtils.copyProperties(cidade, cidadeAtual, "id");
-                cidadeAtual = cidadeService.salvar(cidadeAtual);
-                return ResponseEntity.ok(cidadeAtual);
+            if(cidadeAtual.isPresent()) {
+                BeanUtils.copyProperties(cidade, cidadeAtual.get(), "id");
+                var cidadesalva = cidadeService.salvar(cidadeAtual.get());
+                return ResponseEntity.ok(cidadesalva);
             }
 
             return ResponseEntity.notFound().build();

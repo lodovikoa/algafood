@@ -25,31 +25,31 @@ public class EstadoController {
 
     @GetMapping
     public List<Estado> listar() {
-        return estadoRepository.listar();
+        return estadoRepository.findAll();
     }
 
     @GetMapping("{estadoId}")
     public ResponseEntity<Estado> buscar(@PathVariable Long estadoId) {
-        var estado = estadoRepository.buscar(estadoId);
-        if(estado == null) {
-            return ResponseEntity.notFound().build();
+        var estado = estadoRepository.findById(estadoId);
+        if(estado.isPresent()) {
+            return ResponseEntity.ok(estado.get());
         }
-        return ResponseEntity.ok(estado);
+        return ResponseEntity.notFound().build();
     }
 
     @PostMapping
     public ResponseEntity<Estado> salvar(@RequestBody Estado estado) {
         estado = estadoService.salvar(estado);
-        return ResponseEntity.ok(estado);
+        return ResponseEntity.status(HttpStatus.CREATED).body(estado);
     }
 
     @PutMapping("{estadoId}")
     public ResponseEntity<Estado> alterar(@PathVariable Long estadoId, @RequestBody Estado estado) {
-        var estadoAtual = estadoRepository.buscar(estadoId);
-        if(estadoAtual != null) {
-            BeanUtils.copyProperties(estado, estadoAtual, "id");
-            estadoAtual = estadoService.salvar(estadoAtual);
-            return ResponseEntity.ok(estadoAtual);
+        var estadoAtual = estadoRepository.findById(estadoId);
+        if(estadoAtual.isPresent()) {
+            BeanUtils.copyProperties(estado, estadoAtual.get(), "id");
+            var estadoSalvo = estadoService.salvar(estadoAtual.get());
+            return ResponseEntity.ok(estadoSalvo);
         }
         return ResponseEntity.notFound().build();
     }
@@ -57,10 +57,11 @@ public class EstadoController {
     @DeleteMapping("{estadoId}")
     public ResponseEntity<String> remover(@PathVariable Long estadoId) {
         try {
+            if(!estadoRepository.existsById(estadoId)) {
+                return ResponseEntity.notFound().build();
+            }
             estadoService.remover(estadoId);
             return ResponseEntity.noContent().build();
-        } catch (EntidadeNaoEncontradaException e) {
-            return ResponseEntity.notFound().build();
         } catch (EntidadeEmUsoException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         }
