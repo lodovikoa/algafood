@@ -3,11 +3,10 @@ package com.algaworks.algafood.api.controller;
 import com.algaworks.algafood.domain.model.Cozinha;
 import com.algaworks.algafood.domain.model.Restaurante;
 import com.algaworks.algafood.domain.model.repository.CozinhaRepository;
-import com.algaworks.algafood.domain.model.repository.RestauranteRespository;
+import com.algaworks.algafood.domain.model.repository.RestauranteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
@@ -21,7 +20,7 @@ public class TesteController {
     @Autowired
     private CozinhaRepository cozinhaRepository;
     @Autowired
-    private RestauranteRespository restauranteRespository;
+    private RestauranteRepository restauranteRespository;
 
     @GetMapping("/cozinha/porNome")
     public List<Cozinha> consultarPorNome(String nome) {
@@ -41,6 +40,11 @@ public class TesteController {
     @GetMapping("/restaurante/PorTaxa")
     public List<Restaurante> findByTaxaFreteBetween(BigDecimal taxaInicial, BigDecimal taxaFinal) {
         return restauranteRespository.findByTaxaFreteBetween(taxaInicial, taxaFinal);
+    }
+
+    @GetMapping("/restaurante/PorNomeTaxa")
+    public List<Restaurante> PorNomeTaxaCustomizado(String nome, BigDecimal taxaInicial, BigDecimal taxaFinal) {
+        return restauranteRespository.findCustomizado(nome, taxaInicial, taxaFinal);
     }
 
     @GetMapping("/restaurante/PorNomeCozinha")

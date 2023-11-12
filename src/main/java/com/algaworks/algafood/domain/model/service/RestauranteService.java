@@ -4,7 +4,7 @@ import com.algaworks.algafood.domain.model.Cozinha;
 import com.algaworks.algafood.domain.model.Restaurante;
 import com.algaworks.algafood.domain.model.exception.EntidadeNaoEncontradaException;
 import com.algaworks.algafood.domain.model.repository.CozinhaRepository;
-import com.algaworks.algafood.domain.model.repository.RestauranteRespository;
+import com.algaworks.algafood.domain.model.repository.RestauranteRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,13 +12,12 @@ import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Field;
 import java.util.Map;
-import java.util.Objects;
 
 @Service
 public class RestauranteService {
 
     @Autowired
-    RestauranteRespository restauranteRespository;
+    RestauranteRepository restauranteRespository;
     @Autowired
     CozinhaRepository cozinhaRepository;
 
