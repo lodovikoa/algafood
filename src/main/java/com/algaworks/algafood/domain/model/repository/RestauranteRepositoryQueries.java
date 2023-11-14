@@ -8,4 +8,5 @@ import java.util.List;
 public interface RestauranteRepositoryQueries {
 
     List<Restaurante> findCustomizado(String nome, BigDecimal taxaFreteInicial, BigDecimal taxaFreteFinal);
+    List<Restaurante> findComFreteGratis(String nome);
 }
