@@ -4,11 +4,14 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
-@Table(name = "tb_cidade")
-public class Cidade {
+@Table(name = "tb_grupo")
+public class Grupo {
 
     @EqualsAndHashCode.Include
     @Id
@@ -18,7 +21,7 @@ public class Cidade {
     @Column(nullable = false)
     private String nome;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "estado_id", nullable = false)
-    private Estado estado;
+    @ManyToMany
+    @JoinTable(name = "tb_grupo_permissao", joinColumns = @JoinColumn(name = "grupo_id"),inverseJoinColumns = @JoinColumn(name = "permissao_id"))
+    private List<Permissao> permissoes = new ArrayList<>();
 }
