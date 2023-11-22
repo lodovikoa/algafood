@@ -18,7 +18,7 @@ public class Cidade {
     @Column(nullable = false)
     private String nome;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "estado_id", nullable = false)
+    @ManyToOne
+    @JoinColumn(nullable = false)
     private Estado estado;
 }
