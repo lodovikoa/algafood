@@ -25,12 +25,8 @@ public class CidadeController {
     }
 
     @GetMapping("{cidadeId}")
-    public ResponseEntity<Cidade> buscar(@PathVariable Long cidadeId) {
-        var cidade = cidadeService.buscar(cidadeId);
-        if(cidade.isPresent()) {
-            return ResponseEntity.ok(cidade.get());
-        }
-        return ResponseEntity.notFound().build();
+    public Cidade buscar(@PathVariable Long cidadeId) {
+        return cidadeService.buscarOuFalhar(cidadeId);
     }
 
     @PostMapping
@@ -44,28 +40,16 @@ public class CidadeController {
     }
 
     @PutMapping("{cidadeId}")
-    public ResponseEntity<?> alterar(@PathVariable Long cidadeId, @RequestBody Cidade cidade) {
-        try {
-            var cidadeAtual = cidadeService.buscar(cidadeId);
-            if(cidadeAtual.isPresent()) {
-                BeanUtils.copyProperties(cidade, cidadeAtual.get(), "id");
-                var cidadesalva = cidadeService.salvar(cidadeAtual.get());
-                return ResponseEntity.ok(cidadesalva);
-            }
+    public Cidade alterar(@PathVariable Long cidadeId, @RequestBody Cidade cidade) {
+        var cidadeAtual = cidadeService.buscarOuFalhar(cidadeId);
 
-            return ResponseEntity.notFound().build();
-        } catch (EntidadeNaoEncontradaException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
-        }
+        BeanUtils.copyProperties(cidade, cidadeAtual, "id");
+        return cidadeService.salvar(cidadeAtual);
     }
 
     @DeleteMapping("{cidadeId}")
-    public ResponseEntity<String> remover(@PathVariable Long cidadeId) {
-        try {
-            cidadeService.remover(cidadeId);
-            return ResponseEntity.noContent().build();
-        } catch ( EntidadeNaoEncontradaException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void remover(@PathVariable Long cidadeId) {
+        cidadeService.remover(cidadeId);
     }
 }

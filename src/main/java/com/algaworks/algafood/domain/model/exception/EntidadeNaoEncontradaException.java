@@ -5,12 +5,10 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.server.ResponseStatusException;
 
-public class EntidadeNaoEncontradaException extends ResponseStatusException {
-    public EntidadeNaoEncontradaException(HttpStatusCode status, String mensagem) {
-        super(status, mensagem);
-    }
+@ResponseStatus(HttpStatus.NOT_FOUND)
+public class EntidadeNaoEncontradaException extends RuntimeException {
 
     public EntidadeNaoEncontradaException(String mensagem) {
-        this(HttpStatus.NOT_FOUND, mensagem);
+        super(mensagem);
     }
 }

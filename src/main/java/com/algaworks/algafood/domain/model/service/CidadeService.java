@@ -14,6 +14,8 @@ import java.util.Optional;
 @Service
 public class CidadeService {
 
+    public static final String MSG_CIDADE_NAO_ENCONTRADA = "Não foi encontrado a Cidade com ID %d";
+    public static final String MSG_ESTADO_NAO_ENCONTRADO = "Não foi encontrado cadastro de Estado com ID %d";
     @Autowired
     private CidadeRepository cidadeRepository;
 
@@ -33,7 +35,7 @@ public class CidadeService {
         var estado = estadoRepository.findById(estadoId);
 
         if(estado.isEmpty()) {
-            throw new EntidadeNaoEncontradaException(String.format("Não foi encontrado cadastro de Estado com ID %d", estadoId));
+            throw new EntidadeNaoEncontradaException(String.format(MSG_ESTADO_NAO_ENCONTRADO, estadoId));
         }
 
         cidade.setEstado(estado.get());
@@ -42,9 +44,14 @@ public class CidadeService {
 
     public void remover(Long cidadeId) {
         if(!cidadeRepository.existsById(cidadeId)) {
-            throw new EntidadeNaoEncontradaException(String.format("Não foi encontrado a Cidade com ID %d", cidadeId));
+            throw new EntidadeNaoEncontradaException(String.format(MSG_CIDADE_NAO_ENCONTRADA, cidadeId));
         }
 
         cidadeRepository.deleteById(cidadeId);
+    }
+
+    public Cidade buscarOuFalhar(Long cidadeId) {
+        return cidadeRepository.findById(cidadeId)
+                .orElseThrow(() -> new EntidadeNaoEncontradaException(String.format(MSG_CIDADE_NAO_ENCONTRADA, cidadeId)));
     }
 }
