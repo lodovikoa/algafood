@@ -3,6 +3,7 @@ package com.algaworks.algafood.domain.model.service;
 import com.algaworks.algafood.domain.model.Cozinha;
 import com.algaworks.algafood.domain.model.Restaurante;
 import com.algaworks.algafood.domain.model.exception.EntidadeNaoEncontradaException;
+import com.algaworks.algafood.domain.model.exception.RestauranteNaoEncontradoException;
 import com.algaworks.algafood.domain.model.repository.CozinhaRepository;
 import com.algaworks.algafood.domain.model.repository.RestauranteRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,8 +16,6 @@ import java.util.Map;
 
 @Service
 public class RestauranteService {
-
-    public static final String MSG_RESTAURANTE_NAO_ENCONTRADO = "Não foi encontrado Restaurante com ID %d";
     @Autowired
     RestauranteRepository restauranteRespository;
 
@@ -52,7 +51,7 @@ public class RestauranteService {
 
     public Restaurante buscarOuFalhar(Long restauranteId) {
         return restauranteRespository.findById(restauranteId)
-                .orElseThrow(() -> new EntidadeNaoEncontradaException(String.format(MSG_RESTAURANTE_NAO_ENCONTRADO, restauranteId)));
+                .orElseThrow(() -> new RestauranteNaoEncontradoException(restauranteId));
     }
 
 }

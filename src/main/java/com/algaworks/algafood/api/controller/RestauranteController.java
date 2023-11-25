@@ -2,6 +2,7 @@ package com.algaworks.algafood.api.controller;
 
 import com.algaworks.algafood.domain.model.Restaurante;
 import com.algaworks.algafood.domain.model.exception.EntidadeNaoEncontradaException;
+import com.algaworks.algafood.domain.model.exception.NegocioException;
 import com.algaworks.algafood.domain.model.repository.RestauranteRepository;
 import com.algaworks.algafood.domain.model.service.RestauranteService;
 import org.springframework.beans.BeanUtils;
@@ -35,17 +36,24 @@ public class RestauranteController {
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
     public Restaurante salvar(@RequestBody Restaurante restaurante) {
-        return restauranteService.salvar(restaurante);
-
+        try {
+            return restauranteService.salvar(restaurante);
+        } catch (EntidadeNaoEncontradaException e) {
+            throw new NegocioException(e.getMessage());
+        }
     }
 
     @PutMapping(value = "{restauranteId}")
     public Restaurante alterar(@PathVariable Long restauranteId, @RequestBody Restaurante restaurante) {
         var restauranteAtual = restauranteService.buscarOuFalhar(restauranteId);
         BeanUtils.copyProperties(restaurante, restauranteAtual, "id", "formaPagamentos", "endereco", "dataCadastro", "produtos");
-        return restauranteService.salvar(restauranteAtual);
+
+        try {
+            return restauranteService.salvar(restauranteAtual);
+        } catch (EntidadeNaoEncontradaException e) {
+            throw new NegocioException(e.getMessage());
+        }
 
     }
 

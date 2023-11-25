@@ -1,6 +1,7 @@
 package com.algaworks.algafood.domain.model.service;
 
 import com.algaworks.algafood.domain.model.Cozinha;
+import com.algaworks.algafood.domain.model.exception.CidadeNaoEncontradaException;
 import com.algaworks.algafood.domain.model.exception.EntidadeEmUsoException;
 import com.algaworks.algafood.domain.model.exception.EntidadeNaoEncontradaException;
 import com.algaworks.algafood.domain.model.repository.CozinhaRepository;
@@ -10,8 +11,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class CozinhaService {
-
-    public static final String MSG_COZINHA_NAO_ENCONTRADA = "Não existe um cadastro de cozinha com ID %d";
     public static final String MSG_COZINHA_EM_USO = "Cozinha com ID %d não pode ser removida, pois está em uso.";
     @Autowired
     private CozinhaRepository cozinhaRepository;
@@ -23,7 +22,7 @@ public class CozinhaService {
     public void excluir(Long cozinhaId) {
         try{
             if(!cozinhaRepository.existsById(cozinhaId)) {
-                throw new EntidadeNaoEncontradaException(String.format(MSG_COZINHA_NAO_ENCONTRADA, cozinhaId));
+                throw new CidadeNaoEncontradaException(cozinhaId);
             }
 
             cozinhaRepository.deleteById(cozinhaId);
@@ -34,6 +33,6 @@ public class CozinhaService {
 
     public Cozinha buscarOuFalhar(Long cozinhaId) {
         return cozinhaRepository.findById(cozinhaId)
-                .orElseThrow(() -> new EntidadeNaoEncontradaException(String.format(MSG_COZINHA_NAO_ENCONTRADA, cozinhaId)));
+                .orElseThrow(() -> new CidadeNaoEncontradaException(cozinhaId));
     }
 }
