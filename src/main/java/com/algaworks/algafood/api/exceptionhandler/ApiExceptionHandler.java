@@ -20,6 +20,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,11 +28,27 @@ import java.util.stream.Collectors;
 @ControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
+
+    public static final String MSG_ERRO_GENERICA_USUARIO_FINAL = "Ocorreu um erro interno inesperado no sistema. Tente novamente e se o problema persistir, entre em contato com o administrador do sistema";
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<Object> handleUncaught(Exception ex, WebRequest request) {
+        var status = HttpStatus.INTERNAL_SERVER_ERROR;
+        var problemType = ProblemType.ERRO_DE_SISTEMA;
+        var detail = MSG_ERRO_GENERICA_USUARIO_FINAL;
+
+        ex.printStackTrace();
+
+        var problem = createProblemBuilder(status, problemType, detail,MSG_ERRO_GENERICA_USUARIO_FINAL).build();
+        return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
+    }
+
+
     @Override
     protected ResponseEntity<Object> handleNoHandlerFoundException(NoHandlerFoundException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
         var problemType = ProblemType.RECURSO_NAO_ENCONTRADO;
         var detail = String.format("O recurso %s, que você tentou acessar é inexistente.", ex.getRequestURL());
-        var problem = createProblemBuilder((HttpStatus) status, problemType, detail).build();
+        var problem = createProblemBuilder((HttpStatus) status, problemType, detail, detail).build();
 
         return handleExceptionInternal(ex, problem, headers, status, request);
 
@@ -49,7 +66,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     private ResponseEntity<Object> handleMethodArgumentTypeMismatch(MethodArgumentTypeMismatchException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
         var problemType = ProblemType.PARAMETRO_INVALIDO;
         var detail = String.format("O parâmetro de URL '%s' recebeu o valor '%s', que é um tipo inválido. Corrija e informe um valor compatível com o tipo %s", ex.getName(), ex.getValue(), ex.getRequiredType().getSimpleName());
-        var problem = createProblemBuilder((HttpStatus) status, problemType, detail).build();
+        var problem = createProblemBuilder((HttpStatus) status, problemType, detail, MSG_ERRO_GENERICA_USUARIO_FINAL).build();
 
         return handleExceptionInternal(ex, problem, headers, status, request);
     }
@@ -68,7 +85,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         var problemType = ProblemType.MENSAGEM_INCOMPREENSIVEL;
         var detail = "O corpo da requisição está inválido. Verifique erro de sintaxe.";
 
-        var problem = createProblemBuilder((HttpStatus) status, problemType,detail).build();
+        var problem = createProblemBuilder((HttpStatus) status, problemType,detail, MSG_ERRO_GENERICA_USUARIO_FINAL).build();
 
         //return super.handleHttpMessageNotReadable(ex, headers, status, request);
         return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
@@ -80,7 +97,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         var problemType = ProblemType.RECURSO_NAO_ENCONTRADO;
         var detail = ex.getMessage();
 
-        var problem = createProblemBuilder(status, problemType, detail).build();
+        var problem = createProblemBuilder(status, problemType, detail, detail).build();
 
         return this.handleExceptionInternal(ex, problem, new HttpHeaders(),status, request);
     }
@@ -91,7 +108,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         var problemType = ProblemType.ENTIDADE_EM_USO;
         var detail = ex.getMessage();
 
-        var problem = createProblemBuilder(status, problemType, detail).build();
+        var problem = createProblemBuilder(status, problemType, detail, detail).build();
 
         return this.handleExceptionInternal(ex,problem, new HttpHeaders(), status, request);
     }
@@ -102,7 +119,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         var problemType = ProblemType.ERRO_NEGOCIO;
         var detail = ex.getMessage();
 
-        var problem = createProblemBuilder(status, problemType, detail).build();
+        var problem = createProblemBuilder(status, problemType, detail, MSG_ERRO_GENERICA_USUARIO_FINAL).build();
 
         return this.handleExceptionInternal(ex, problem, new HttpHeaders(),status, request);
     }
@@ -114,23 +131,29 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
             body = Problem.builder()
                     .title(ex.getMessage())
                     .status(statusCode.value())
+                    .userMessage(MSG_ERRO_GENERICA_USUARIO_FINAL)
+                    .timesTamp(LocalDateTime.now())
                     .build();
         } else if(body instanceof String) {
             body = Problem.builder()
                     .title((String) body)
                     .status(statusCode.value())
+                    .userMessage(MSG_ERRO_GENERICA_USUARIO_FINAL)
+                    .timesTamp(LocalDateTime.now())
                     .build();
         }
 
         return super.handleExceptionInternal(ex, body, headers, statusCode, request);
     }
 
-    private Problem.ProblemBuilder createProblemBuilder(HttpStatus status, ProblemType problemType, String detail) {
+    private Problem.ProblemBuilder createProblemBuilder(HttpStatus status, ProblemType problemType, String detail, String userMessage) {
         return Problem.builder()
                 .status(status.value())
                 .type(problemType.getUri())
                 .title(problemType.getTitle())
-                .detail(detail);
+                .detail(detail)
+                .userMessage(userMessage)
+                .timesTamp(LocalDateTime.now());
     }
 
     private ResponseEntity<Object> handleInvalidFormat(InvalidFormatException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
@@ -139,7 +162,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         var problemType = ProblemType.MENSAGEM_INCOMPREENSIVEL;
         var detail = String.format("A propriedade '%s' recebeu o valor '%s', que é um tipo inválido. Corrija e informe um valor compatível com o tipo %s.",
                 path, ex.getValue(), ex.getTargetType().getSimpleName());
-        var problem = createProblemBuilder((HttpStatus) status, problemType, detail).build();
+        var problem = createProblemBuilder((HttpStatus) status, problemType, detail, MSG_ERRO_GENERICA_USUARIO_FINAL).build();
 
         return handleExceptionInternal(ex, problem, headers, status, request);
     }
@@ -148,7 +171,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         var path = joinPath(ex.getPath());
         var problemType = ProblemType.MENSAGEM_INCOMPREENSIVEL;
         var detail = String.format("A propriedade '%s' não existe. Corrija ou remova essa propriedade e tente novamente.", path);
-        var problem = createProblemBuilder((HttpStatus) status, problemType, detail).build();
+        var problem = createProblemBuilder((HttpStatus) status, problemType, detail, MSG_ERRO_GENERICA_USUARIO_FINAL).build();
         return handleExceptionInternal(ex, problem, headers, status, request);
     }
 
