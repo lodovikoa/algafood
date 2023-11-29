@@ -5,12 +5,14 @@ import com.algaworks.algafood.domain.model.exception.EntidadeEmUsoException;
 import com.algaworks.algafood.domain.model.exception.EntidadeNaoEncontradaException;
 import com.algaworks.algafood.domain.model.repository.CozinhaRepository;
 import com.algaworks.algafood.domain.model.service.CozinhaService;
+import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.print.attribute.standard.Media;
@@ -38,7 +40,7 @@ public class CozinhaController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Cozinha salvar(@RequestBody Cozinha cozinha) {
+    public Cozinha salvar(@RequestBody @Valid Cozinha cozinha) {
         return cozinhaService.salvar(cozinha);
     }
 
