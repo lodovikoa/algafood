@@ -4,6 +4,7 @@ import com.algaworks.algafood.domain.model.Cidade;
 import com.algaworks.algafood.domain.model.exception.EstadoNaoEncontradoException;
 import com.algaworks.algafood.domain.model.exception.NegocioException;
 import com.algaworks.algafood.domain.model.service.CidadeService;
+import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,7 +31,7 @@ public class CidadeController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Cidade salvar(@RequestBody Cidade cidade) {
+    public Cidade salvar(@RequestBody @Valid Cidade cidade) {
         try {
             return cidadeService.salvar(cidade);
         } catch (EstadoNaoEncontradoException e) {
@@ -39,7 +40,7 @@ public class CidadeController {
     }
 
     @PutMapping("{cidadeId}")
-    public Cidade alterar(@PathVariable Long cidadeId, @RequestBody Cidade cidade) {
+    public Cidade alterar(@PathVariable Long cidadeId, @RequestBody @Valid Cidade cidade) {
         var cidadeAtual = cidadeService.buscarOuFalhar(cidadeId);
         BeanUtils.copyProperties(cidade, cidadeAtual, "id");
 
