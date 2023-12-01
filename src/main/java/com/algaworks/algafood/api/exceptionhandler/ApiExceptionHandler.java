@@ -16,12 +16,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
-import org.springframework.web.servlet.LocaleContextResolver;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
@@ -45,12 +45,17 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         var bindingResult = ex.getBindingResult();
 
         var problemFields = bindingResult
-                .getFieldErrors()
-                .stream().map(fieldError -> {
-                    var message = messageSource.getMessage(fieldError, LocaleContextHolder.getLocale());
+                .getAllErrors()
+                .stream().map(objectError -> {
+                    var message = messageSource.getMessage(objectError, LocaleContextHolder.getLocale());
 
-                    return Problem.Field.builder()
-                            .name(fieldError.getField())
+                    String name = objectError.getObjectName();
+                    if(objectError instanceof FieldError) {
+                        name = ((FieldError) objectError).getField();
+                    }
+
+                    return Problem.Object.builder()
+                            .name(name)
                             .userMessage(message)
                             .build();
                 })
@@ -176,7 +181,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         return super.handleExceptionInternal(ex, body, headers, statusCode, request);
     }
 
-    private Problem.ProblemBuilder createProblemBuilder(HttpStatus status, ProblemType problemType, String detail, String userMessage, List<Problem.Field> problemFields ) {
+    private Problem.ProblemBuilder createProblemBuilder(HttpStatus status, ProblemType problemType, String detail, String userMessage, List<Problem.Object> objectFields ) {
         return Problem.builder()
                 .status(status.value())
                 .timesTamp(LocalDateTime.now())
@@ -184,7 +189,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
                 .title(problemType.getTitle())
                 .detail(detail)
                 .userMessage(userMessage)
-                .fields(problemFields);
+                .objects(objectFields);
     }
 
     private ResponseEntity<Object> handleInvalidFormat(InvalidFormatException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
