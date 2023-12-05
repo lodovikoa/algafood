@@ -72,7 +72,6 @@
 			<artifactId>commons-lang3</artifactId>
 		</dependency>
 
-
 	</dependencies>
 
 	<build>

@@ -1,5 +1,6 @@
 package com.algaworks.algafood.domain.model.service;
 
+import com.algaworks.algafood.core.validation.ValidacaoException;
 import com.algaworks.algafood.domain.model.Cozinha;
 import com.algaworks.algafood.domain.model.Restaurante;
 import com.algaworks.algafood.domain.model.exception.EntidadeNaoEncontradaException;
@@ -15,6 +16,8 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
+import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.SmartValidator;
 
 import java.lang.reflect.Field;
 import java.util.Map;
@@ -27,6 +30,9 @@ public class RestauranteService {
     @Autowired
     CozinhaService cozinhaService;
 
+    @Autowired
+    private SmartValidator validator;
+
     public Restaurante salvar(Restaurante restaurante) {
         var cozinha = cozinhaService.buscarOuFalhar(restaurante.getCozinha().getId());
         restaurante.setCozinha(cozinha);
@@ -37,7 +43,18 @@ public class RestauranteService {
         var restauranteAtual = this.buscarOuFalhar(restauranteId);
 
         merge(campos, restauranteAtual, request);
+        validate(restauranteAtual, "restaurante");
+
         return salvar(restauranteAtual);
+    }
+
+    private void validate(Restaurante restaurante, String objectName) {
+        BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(restaurante, objectName);
+        validator.validate(restaurante, bindingResult);
+
+        if(bindingResult.hasErrors()) {
+            throw new ValidacaoException(bindingResult);
+        }
     }
 
     private void merge(Map<String, Object> dadosOrigem, Restaurante restauranteDestino, HttpServletRequest request) {
