@@ -5,6 +5,7 @@ import com.algaworks.algafood.domain.model.repository.CozinhaRepository;
 import com.algaworks.algafood.util.DatabaseCleaner;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -71,6 +72,29 @@ class CadastroCozinhaIT {
 				.post()
 			.then()
 				.statusCode(HttpStatus.CREATED.value());
+	}
+
+	@Test
+	public void deverRetornarRespostaEStatusCorretos_QuandoConsultarCozinhaExistente() {
+		RestAssured.given()
+					.pathParam("cozinhaId", 2)
+					.accept(ContentType.JSON)
+				.when()
+				.	get("/{cozinhaId}")
+				.then()
+					.statusCode(HttpStatus.OK.value())
+				.body("nome", CoreMatchers.equalTo("Americana"));
+	}
+
+	@Test
+	public void deverRetornarStatus404_QuandoConsultarCozinhaInexistente() {
+		RestAssured.given()
+				.pathParam("cozinhaId", 200)
+				.accept(ContentType.JSON)
+				.when()
+				.	get("/{cozinhaId}")
+				.then()
+				.statusCode(HttpStatus.NOT_FOUND.value());
 	}
 
 	private void prepararDados() {
