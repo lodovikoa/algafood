@@ -11,6 +11,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -36,6 +37,7 @@ public class RestauranteController {
         return restauranteService.buscarOuFalhar(restauranteId);
     }
 
+    @Transactional
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Restaurante salvar(@RequestBody @Valid Restaurante restaurante) {
@@ -46,6 +48,7 @@ public class RestauranteController {
         }
     }
 
+    @Transactional
     @PutMapping(value = "{restauranteId}")
     public Restaurante alterar(@PathVariable Long restauranteId, @RequestBody @Valid Restaurante restaurante) {
         var restauranteAtual = restauranteService.buscarOuFalhar(restauranteId);
@@ -59,6 +62,7 @@ public class RestauranteController {
 
     }
 
+    @Transactional
     @PatchMapping("/{restauranteId}")
     public Restaurante atualizarParcial(@PathVariable Long restauranteId, @RequestBody Map<String, Object> campos, HttpServletRequest request) {
         return restauranteService.atualizarParcial(restauranteId, campos, request);

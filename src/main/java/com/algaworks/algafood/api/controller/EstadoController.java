@@ -10,6 +10,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,12 +35,14 @@ public class EstadoController {
         return estadoService.buscarOuFalhar(estadoId);
     }
 
+    @Transactional
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Estado salvar(@RequestBody @Valid Estado estado) {
         return estadoService.salvar(estado);
     }
 
+    @Transactional
     @PutMapping("{estadoId}")
     public Estado alterar(@PathVariable Long estadoId, @RequestBody @Valid Estado estado) {
         var estadoAtual = estadoService.buscarOuFalhar(estadoId);
@@ -47,6 +50,7 @@ public class EstadoController {
         return estadoService.salvar(estadoAtual);
     }
 
+    @Transactional
     @DeleteMapping("{estadoId}")
     public void remover(@PathVariable Long estadoId) {
         estadoService.remover(estadoId);

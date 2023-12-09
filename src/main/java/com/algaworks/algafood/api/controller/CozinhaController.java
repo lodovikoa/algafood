@@ -12,6 +12,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,6 +39,7 @@ public class CozinhaController {
         return cozinhaService.buscarOuFalhar(cozinhaId);
     }
 
+    @Transactional
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Cozinha salvar(@RequestBody @Valid Cozinha cozinha) {
@@ -51,6 +53,7 @@ public class CozinhaController {
         return cozinhaService.salvar(cozinhaAtual);
     }
 
+    @Transactional
     @DeleteMapping(value = "/{cozinhaId}")
     public void remover(@PathVariable Long cozinhaId) {
         cozinhaService.excluir(cozinhaId);

@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +15,9 @@ import java.util.List;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 @Table(name = "tb_cozinha")
-public class Cozinha {
+public class Cozinha implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @NotNull(groups = Groups.CozinhaId.class)
     @EqualsAndHashCode.Include
@@ -22,7 +25,7 @@ public class Cozinha {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
+    @NotBlank()
     @Column(nullable = false)
     private String nome;
 

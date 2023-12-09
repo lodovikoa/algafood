@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,6 +30,7 @@ public class CidadeController {
         return cidadeService.buscarOuFalhar(cidadeId);
     }
 
+    @Transactional
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Cidade salvar(@RequestBody @Valid Cidade cidade) {
@@ -39,6 +41,7 @@ public class CidadeController {
         }
     }
 
+    @Transactional
     @PutMapping("{cidadeId}")
     public Cidade alterar(@PathVariable Long cidadeId, @RequestBody @Valid Cidade cidade) {
         var cidadeAtual = cidadeService.buscarOuFalhar(cidadeId);
@@ -51,6 +54,7 @@ public class CidadeController {
         }
     }
 
+    @Transactional
     @DeleteMapping("{cidadeId}")
     public void remover(@PathVariable Long cidadeId) {
         cidadeService.remover(cidadeId);
