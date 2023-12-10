@@ -29,6 +29,8 @@ public class EstadoService {
             estadoRepository.deleteById(estadoId);
         } catch (DataIntegrityViolationException e) {
             throw new EntidadeEmUsoException(String.format(MSG_ESTADO_EM_USO, estadoId));
+        } catch (Exception e) {
+            throw new EntidadeEmUsoException(String.format(MSG_ESTADO_EM_USO,estadoId));
         }
     }
 

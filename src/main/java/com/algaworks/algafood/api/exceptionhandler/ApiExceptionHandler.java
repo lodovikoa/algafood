@@ -12,6 +12,7 @@ import org.springframework.beans.TypeMismatchException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -55,6 +56,18 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler  {
         ex.printStackTrace();
 
         var problem = createProblemBuilder(status, problemType, detail,MSG_ERRO_GENERICA_USUARIO_FINAL, null).build();
+        return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<Object> handleEmUso(DataIntegrityViolationException ex, WebRequest request) {
+        var status = HttpStatus.CONFLICT;
+        var problemType = ProblemType.ENTIDADE_EM_USO;
+        var detail = ex.getMessage();
+
+        ex.printStackTrace();
+
+        var problem = createProblemBuilder(status, problemType, detail, MSG_ERRO_GENERICA_USUARIO_FINAL, null).build();
         return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
     }
 

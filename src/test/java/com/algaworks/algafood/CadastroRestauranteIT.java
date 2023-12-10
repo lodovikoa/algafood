@@ -71,8 +71,8 @@ public class CadastroRestauranteIT {
                 .when()
                     .post()
                 .then()
-                    .statusCode(HttpStatus.BAD_REQUEST.value());
-               //     .body("title", CoreMatchers.equalTo(DADOS_INVALIDOS_PROBLEM_TITLE));
+                    .statusCode(HttpStatus.BAD_REQUEST.value())
+                    .body("title", CoreMatchers.equalTo(DADOS_INVALIDOS_PROBLEM_TITLE));
     }
 
     @Test
