@@ -26,9 +26,8 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-import org.yaml.snakeyaml.constructor.Construct;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
@@ -148,14 +147,14 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler  {
                     .title(ex.getMessage())
                     .status(statusCode.value())
                     .userMessage(MSG_ERRO_GENERICA_USUARIO_FINAL)
-                    .timesTamp(LocalDateTime.now())
+                    .timesTamp(OffsetDateTime.now())
                     .build();
         } else if(body instanceof String) {
             body = Problem.builder()
                     .title((String) body)
                     .status(statusCode.value())
                     .userMessage(MSG_ERRO_GENERICA_USUARIO_FINAL)
-                    .timesTamp(LocalDateTime.now())
+                    .timesTamp(OffsetDateTime.now())
                     .build();
         }
 
@@ -171,7 +170,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler  {
     private Problem.ProblemBuilder createProblemBuilder(HttpStatus status, ProblemType problemType, String detail, String userMessage, List<Problem.Object> objectFields ) {
         return Problem.builder()
                 .status(status.value())
-                .timesTamp(LocalDateTime.now())
+                .timesTamp(OffsetDateTime.now())
                 .type(problemType.getUri())
                 .title(problemType.getTitle())
                 .detail(detail)

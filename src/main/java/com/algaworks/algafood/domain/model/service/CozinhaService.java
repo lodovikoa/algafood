@@ -2,6 +2,7 @@ package com.algaworks.algafood.domain.model.service;
 
 import com.algaworks.algafood.domain.model.Cozinha;
 import com.algaworks.algafood.domain.model.exception.CidadeNaoEncontradaException;
+import com.algaworks.algafood.domain.model.exception.CozinhaNaoEncontradaException;
 import com.algaworks.algafood.domain.model.exception.EntidadeEmUsoException;
 import com.algaworks.algafood.domain.model.exception.EntidadeNaoEncontradaException;
 import com.algaworks.algafood.domain.model.repository.CozinhaRepository;
@@ -21,10 +22,7 @@ public class CozinhaService {
 
     public void excluir(Long cozinhaId) {
         try{
-            if(!cozinhaRepository.existsById(cozinhaId)) {
-                throw new CidadeNaoEncontradaException(cozinhaId);
-            }
-
+            this.buscarOuFalhar(cozinhaId);
             cozinhaRepository.deleteById(cozinhaId);
         } catch (DataIntegrityViolationException e) {
             throw new EntidadeEmUsoException(String.format(MSG_COZINHA_EM_USO, cozinhaId));
@@ -33,6 +31,6 @@ public class CozinhaService {
 
     public Cozinha buscarOuFalhar(Long cozinhaId) {
         return cozinhaRepository.findById(cozinhaId)
-                .orElseThrow(() -> new CidadeNaoEncontradaException(cozinhaId));
+                .orElseThrow(() -> new CozinhaNaoEncontradaException(cozinhaId));
     }
 }
