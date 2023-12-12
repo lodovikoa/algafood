@@ -11,10 +11,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class JacsonMixinModule extends SimpleModule {
-    private static final long serialVersionUID = -8592065792389944193L;
 
     public JacsonMixinModule() {
-        setMixInAnnotation(Restaurante.class, RestauranteMixin.class);
         setMixInAnnotation(Cozinha.class, CozinhaMixin.class);
         setMixInAnnotation(Cidade.class, CidadeMixin.class);
     }
