@@ -19,7 +19,6 @@ public class Cozinha implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @NotNull(groups = Groups.CozinhaId.class)
     @EqualsAndHashCode.Include
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

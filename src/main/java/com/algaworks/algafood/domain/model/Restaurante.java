@@ -34,19 +34,12 @@ public class Restaurante implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private  Long id;
 
-    @NotBlank
     @Column(nullable = false)
     private String nome;
 
-    @PositiveOrZero
-   // @TaxaFrete
-   // @Multiplo(numero = 5)
     @Column(nullable = false)
     private BigDecimal taxaFrete;
 
-    @Valid
-    @ConvertGroup(from = Default.class, to = Groups.CozinhaId.class)
-    @NotNull
     @ManyToOne // (fetch = FetchType.LAZY)
     @JoinColumn(name = "cozinha_id", nullable = false)
     private Cozinha cozinha;
