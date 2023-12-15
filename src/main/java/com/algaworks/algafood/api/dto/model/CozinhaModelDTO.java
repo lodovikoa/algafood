@@ -1,7 +1,11 @@
 package com.algaworks.algafood.api.dto.model;
 
-public record CozinhaModelDTO(
-        Long id,
-        String nome
-) {
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+public class CozinhaModelDTO {
+        Long id;
+        String nome;
 }

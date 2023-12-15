@@ -1,5 +1,6 @@
 package com.algaworks.algafood.api.controller;
 
+import com.algaworks.algafood.api.assembler.RestauranteInputDtoDisassembler;
 import com.algaworks.algafood.api.assembler.RestauranteModelDtoAssembler;
 import com.algaworks.algafood.api.dto.input.RestauranteInputDTO;
 import com.algaworks.algafood.api.dto.model.RestauranteModelDTO;
@@ -33,6 +34,9 @@ public class RestauranteController {
     @Autowired
     private RestauranteModelDtoAssembler restauranteModelDtoAssembler;
 
+    @Autowired
+    private RestauranteInputDtoDisassembler restauranteInputDtoDisassembler;
+
     @GetMapping
     public List<RestauranteModelDTO> listar() {
         return restauranteModelDtoAssembler.toCollectionModel(restauranteRespository.findAll());
@@ -49,7 +53,7 @@ public class RestauranteController {
     @ResponseStatus(HttpStatus.CREATED)
     public RestauranteModelDTO salvar(@RequestBody @Valid RestauranteInputDTO restauranteImputDTO) {
         try {
-            Restaurante restaurante = restauranteModelDtoAssembler.toDomainObject(restauranteImputDTO);
+            Restaurante restaurante = restauranteInputDtoDisassembler.toDomainObject(restauranteImputDTO);
 
             return restauranteModelDtoAssembler.toModelDTO(restauranteService.salvar(restaurante));
         } catch (EntidadeNaoEncontradaException e) {
@@ -60,7 +64,7 @@ public class RestauranteController {
     @Transactional
     @PutMapping(value = "{restauranteId}")
     public RestauranteModelDTO alterar(@PathVariable Long restauranteId, @RequestBody @Valid RestauranteInputDTO restauranteInputDTO) {
-        Restaurante restaurante = restauranteModelDtoAssembler.toDomainObject(restauranteInputDTO);
+        Restaurante restaurante = restauranteInputDtoDisassembler.toDomainObject(restauranteInputDTO);
         var restauranteAtual = restauranteService.buscarOuFalhar(restauranteId);
         BeanUtils.copyProperties(restaurante, restauranteAtual, "id", "formaPagamentos", "endereco", "dataCadastro", "produtos");
 

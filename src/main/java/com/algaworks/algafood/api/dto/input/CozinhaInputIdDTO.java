@@ -1,8 +1,12 @@
 package com.algaworks.algafood.api.dto.input;
 
 import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.Setter;
 
-public record CozinhaInputIdDTO(
+@Getter
+@Setter
+public class CozinhaInputIdDTO {
         @NotNull
-        Long id)
-{ }
+        Long id ;
+}
