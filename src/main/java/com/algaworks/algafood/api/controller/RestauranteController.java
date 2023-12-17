@@ -64,10 +64,8 @@ public class RestauranteController {
     @Transactional
     @PutMapping(value = "{restauranteId}")
     public RestauranteModelDTO alterar(@PathVariable Long restauranteId, @RequestBody @Valid RestauranteInputDTO restauranteInputDTO) {
-        Restaurante restaurante = restauranteInputDtoDisassembler.toDomainObject(restauranteInputDTO);
         var restauranteAtual = restauranteService.buscarOuFalhar(restauranteId);
-        BeanUtils.copyProperties(restaurante, restauranteAtual, "id", "formaPagamentos", "endereco", "dataCadastro", "produtos");
-
+        restauranteInputDtoDisassembler.copyToDomainObject(restauranteInputDTO, restauranteAtual);
         try {
             return restauranteModelDtoAssembler.toModelDTO(restauranteService.salvar(restauranteAtual));
         } catch (EntidadeNaoEncontradaException e) {

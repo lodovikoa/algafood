@@ -15,14 +15,11 @@ public class RestauranteInputDtoDisassembler {
 
     public Restaurante toDomainObject(RestauranteInputDTO restauranteInputDTO) {
         return modelMapper.map(restauranteInputDTO, Restaurante.class);
-//        Cozinha cozinha = new Cozinha();
-//        cozinha.setId(restauranteInputDTO.cozinha().id());
-//
-//        Restaurante restaurante = new Restaurante();
-//        restaurante.setNome(restauranteInputDTO.nome());
-//        restaurante.setTaxaFrete(restauranteInputDTO.taxaFrete());
-//        restaurante.setCozinha(cozinha);
-//
-//        return restaurante;
+    }
+
+    public void copyToDomainObject(RestauranteInputDTO restauranteInputDTO, Restaurante restaurante) {
+        // Para evitar org.hibernate.HibernagteException:identifier of an instance of com.algaworks.algafood.domain.model.Cozinha was altered from 1 to 2
+        restaurante.setCozinha(new Cozinha());
+        modelMapper.map(restauranteInputDTO, restaurante);
     }
 }

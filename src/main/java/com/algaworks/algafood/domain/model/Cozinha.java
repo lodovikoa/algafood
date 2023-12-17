@@ -24,7 +24,6 @@ public class Cozinha implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank()
     @Column(nullable = false)
     private String nome;
 

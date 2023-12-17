@@ -1,5 +1,9 @@
 package com.algaworks.algafood.api.controller;
 
+import com.algaworks.algafood.api.assembler.CozinhaInputDTODisassembler;
+import com.algaworks.algafood.api.assembler.CozinhaModelDTOAssembler;
+import com.algaworks.algafood.api.dto.input.CozinhaInputDTO;
+import com.algaworks.algafood.api.dto.model.CozinhaModelDTO;
 import com.algaworks.algafood.domain.model.Cozinha;
 import com.algaworks.algafood.domain.model.exception.EntidadeEmUsoException;
 import com.algaworks.algafood.domain.model.exception.EntidadeNaoEncontradaException;
@@ -29,28 +33,39 @@ public class CozinhaController {
     @Autowired
     private CozinhaService cozinhaService;
 
+    @Autowired
+    private CozinhaModelDTOAssembler cozinhaModelDTOAssembler;
+
+    @Autowired
+    private CozinhaInputDTODisassembler cozinhaInputDTODisassembler;
+
     @GetMapping
-    public List<Cozinha> listar() {
-        return cozinhaRepository.findAll();
+    public List<CozinhaModelDTO> listar() {
+        var cozinhas = cozinhaRepository.findAll();
+        return cozinhaModelDTOAssembler.toCollectionModel(cozinhas);
     }
 
     @GetMapping("/{cozinhaId}")
-    public Cozinha buscar(@PathVariable Long cozinhaId) {
-        return cozinhaService.buscarOuFalhar(cozinhaId);
+    public CozinhaModelDTO buscar(@PathVariable Long cozinhaId) {
+        var cozinha = cozinhaService.buscarOuFalhar(cozinhaId);
+        return cozinhaModelDTOAssembler.toModel(cozinha);
     }
 
     @Transactional
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Cozinha salvar(@RequestBody @Valid Cozinha cozinha) {
-        return cozinhaService.salvar(cozinha);
+    public CozinhaModelDTO salvar(@RequestBody @Valid CozinhaInputDTO cozinhaInputDTO) {
+        var cozinha = cozinhaInputDTODisassembler.toDomainObject(cozinhaInputDTO);
+        cozinha = cozinhaService.salvar(cozinha);
+        return cozinhaModelDTOAssembler.toModel(cozinha);
     }
 
     @PutMapping(value = "/{cozinhaId}")
-    public Cozinha atualizar(@PathVariable Long cozinhaId, @RequestBody @Valid Cozinha cozinha) {
+    public CozinhaModelDTO atualizar(@PathVariable Long cozinhaId, @RequestBody @Valid CozinhaInputDTO cozinhaInputDTO) {
         var cozinhaAtual = cozinhaService.buscarOuFalhar(cozinhaId);
-        BeanUtils.copyProperties(cozinha, cozinhaAtual, "id");
-        return cozinhaService.salvar(cozinhaAtual);
+        cozinhaInputDTODisassembler.copyToDomainObject(cozinhaInputDTO, cozinhaAtual);
+        cozinhaAtual = cozinhaService.salvar(cozinhaAtual);
+        return cozinhaModelDTOAssembler.toModel(cozinhaAtual);
     }
 
     @Transactional

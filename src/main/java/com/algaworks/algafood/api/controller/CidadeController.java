@@ -1,5 +1,9 @@
 package com.algaworks.algafood.api.controller;
 
+import com.algaworks.algafood.api.assembler.CidadeInputDTODisassembler;
+import com.algaworks.algafood.api.assembler.CidadeModelDTOAssembler;
+import com.algaworks.algafood.api.dto.input.CidadeInputDTO;
+import com.algaworks.algafood.api.dto.model.CidadeModelDTO;
 import com.algaworks.algafood.domain.model.Cidade;
 import com.algaworks.algafood.domain.model.exception.EstadoNaoEncontradoException;
 import com.algaworks.algafood.domain.model.exception.NegocioException;
@@ -18,24 +22,35 @@ import java.util.List;
 public class CidadeController {
 
     @Autowired
-    CidadeService cidadeService;
+    private CidadeService cidadeService;
+
+    @Autowired
+    private CidadeModelDTOAssembler cidadeModelDTOAssembler;
+
+    @Autowired
+    private CidadeInputDTODisassembler cidadeInputDTODisassembler;
 
     @GetMapping
-    public List<Cidade> listar() {
-        return cidadeService.listar();
+    public List<CidadeModelDTO> listar() {
+        var todasCidades = cidadeService.listar();
+        return cidadeModelDTOAssembler.toCollectionModel(todasCidades);
     }
 
     @GetMapping("{cidadeId}")
-    public Cidade buscar(@PathVariable Long cidadeId) {
-        return cidadeService.buscarOuFalhar(cidadeId);
+    public CidadeModelDTO buscar(@PathVariable Long cidadeId) {
+        var cidade = cidadeService.buscarOuFalhar(cidadeId);
+        return cidadeModelDTOAssembler.toModel(cidade);
     }
 
     @Transactional
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Cidade salvar(@RequestBody @Valid Cidade cidade) {
+    public CidadeModelDTO salvar(@RequestBody @Valid CidadeInputDTO cidadeInputDTO) {
         try {
-            return cidadeService.salvar(cidade);
+            var cidade = cidadeInputDTODisassembler.toDomainObject(cidadeInputDTO);
+            cidade = cidadeService.salvar(cidade);
+
+            return cidadeModelDTOAssembler.toModel(cidade);
         } catch (EstadoNaoEncontradoException e) {
             throw  new NegocioException(e.getMessage(), e);
         }
@@ -43,12 +58,12 @@ public class CidadeController {
 
     @Transactional
     @PutMapping("{cidadeId}")
-    public Cidade alterar(@PathVariable Long cidadeId, @RequestBody @Valid Cidade cidade) {
-        var cidadeAtual = cidadeService.buscarOuFalhar(cidadeId);
-        BeanUtils.copyProperties(cidade, cidadeAtual, "id");
-
+    public CidadeModelDTO alterar(@PathVariable Long cidadeId, @RequestBody @Valid CidadeInputDTO cidadeInputDTO) {
         try {
-            return cidadeService.salvar(cidadeAtual);
+            var cidadeAtual = cidadeService.buscarOuFalhar(cidadeId);
+            cidadeInputDTODisassembler.copyToDomainObject(cidadeInputDTO, cidadeAtual);
+            cidadeAtual = cidadeService.salvar(cidadeAtual);
+            return cidadeModelDTOAssembler.toModel(cidadeAtual);
         }catch (EstadoNaoEncontradoException e) {
             throw new NegocioException(e.getMessage(), e);
         }

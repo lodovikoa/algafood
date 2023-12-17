@@ -1,5 +1,9 @@
 package com.algaworks.algafood.api.controller;
 
+import com.algaworks.algafood.api.assembler.EstadoInputDTODisassembler;
+import com.algaworks.algafood.api.assembler.EstadoModelDTOAssembler;
+import com.algaworks.algafood.api.dto.input.EstadoInputDTO;
+import com.algaworks.algafood.api.dto.model.EstadoModelDTO;
 import com.algaworks.algafood.domain.model.Estado;
 import com.algaworks.algafood.domain.model.exception.EntidadeEmUsoException;
 import com.algaworks.algafood.domain.model.exception.EntidadeNaoEncontradaException;
@@ -23,31 +27,44 @@ public class EstadoController {
     private EstadoRepository estadoRepository;
 
     @Autowired
+    private EstadoModelDTOAssembler estadoModelDTOAssembler;
+
+    @Autowired
+    private EstadoInputDTODisassembler estadoInputDTODisassembler;
+
+    @Autowired
     private EstadoService estadoService;
 
     @GetMapping
-    public List<Estado> listar() {
-        return estadoRepository.findAll();
+    public List<EstadoModelDTO> listar() {
+        List<Estado> todosEstados = estadoRepository.findAll();
+        return estadoModelDTOAssembler.toCollectionModel(todosEstados);
     }
 
     @GetMapping("{estadoId}")
-    public Estado buscar(@PathVariable Long estadoId) {
-        return estadoService.buscarOuFalhar(estadoId);
+    public EstadoModelDTO buscar(@PathVariable Long estadoId) {
+        Estado estado = estadoService.buscarOuFalhar(estadoId);
+        return estadoModelDTOAssembler.toModel(estado);
     }
 
     @Transactional
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Estado salvar(@RequestBody @Valid Estado estado) {
-        return estadoService.salvar(estado);
+    public EstadoModelDTO adicionar(@RequestBody @Valid EstadoInputDTO estadoInputDTO) {
+        Estado estado = estadoInputDTODisassembler.toDomainObject(estadoInputDTO);
+        estado = estadoService.salvar(estado);
+        return estadoModelDTOAssembler.toModel(estado);
     }
 
     @Transactional
     @PutMapping("{estadoId}")
-    public Estado alterar(@PathVariable Long estadoId, @RequestBody @Valid Estado estado) {
+    public EstadoModelDTO alterar(@PathVariable Long estadoId, @RequestBody @Valid EstadoInputDTO estadoInputDTO) {
         var estadoAtual = estadoService.buscarOuFalhar(estadoId);
-        BeanUtils.copyProperties(estado, estadoAtual, "id");
-        return estadoService.salvar(estadoAtual);
+
+        estadoInputDTODisassembler.copyToDomainObject(estadoInputDTO, estadoAtual);
+        estadoAtual = estadoService.salvar(estadoAtual);
+
+        return estadoModelDTOAssembler.toModel(estadoAtual);
     }
 
     @Transactional
