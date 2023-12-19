@@ -22,11 +22,10 @@ public class EstadoService {
 
     public void remover(Long estadoId) {
         try {
-            if(!estadoRepository.existsById(estadoId)) {
-                throw new EstadoNaoEncontradoException(estadoId);
-            }
+            this.buscarOuFalhar(estadoId);
 
             estadoRepository.deleteById(estadoId);
+            estadoRepository.flush();
         } catch (DataIntegrityViolationException e) {
             throw new EntidadeEmUsoException(String.format(MSG_ESTADO_EM_USO, estadoId));
         } catch (Exception e) {

@@ -46,6 +46,8 @@ public class Restaurante implements Serializable {
     @Embedded
     private Endereco endereco;
 
+    private Boolean ativo = Boolean.TRUE;
+
     @CreationTimestamp
     @Column(nullable = false, columnDefinition = "datetime")
     private OffsetDateTime dataCadastro;
@@ -60,4 +62,12 @@ public class Restaurante implements Serializable {
 
     @OneToMany(mappedBy = "restaurante")
     private List<Produto> produtos = new ArrayList<>();
+
+    public void ativar() {
+        this.setAtivo(true);
+    }
+
+    public void inativar() {
+        this.setAtivo(false);
+    }
 }

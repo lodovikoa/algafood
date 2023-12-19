@@ -80,6 +80,16 @@ public class RestauranteService {
         }
     }
 
+    public void ativar(Long restauranteId) {
+        Restaurante restauranteAtual = this.buscarOuFalhar(restauranteId);
+        restauranteAtual.ativar();
+    }
+
+    public void inativar(Long restauranteId) {
+        Restaurante restauranteAtual = this.buscarOuFalhar(restauranteId);
+        restauranteAtual.inativar();
+    }
+
     public Restaurante buscarOuFalhar(Long restauranteId) {
         return restauranteRespository.findById(restauranteId)
                 .orElseThrow(() -> new RestauranteNaoEncontradoException(restauranteId));

@@ -44,11 +44,10 @@ public class CidadeService {
 
     public void remover(Long cidadeId) {
         try {
-            if (!cidadeRepository.existsById(cidadeId)) {
-                throw new CidadeNaoEncontradaException(cidadeId);
-            }
+            this.buscarOuFalhar(cidadeId);
 
             cidadeRepository.deleteById(cidadeId);
+            cidadeRepository.flush();
         } catch (DataIntegrityViolationException e) {
             throw new EntidadeEmUsoException(String.format(MSG_CIDADE_EM_USU,cidadeId ));
         }

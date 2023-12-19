@@ -79,4 +79,18 @@ public class RestauranteController {
     public RestauranteModelDTO atualizarParcial(@PathVariable Long restauranteId, @RequestBody Map<String, Object> campos, HttpServletRequest request) {
         return restauranteModelDtoAssembler.toModelDTO(restauranteService.atualizarParcial(restauranteId, campos, request));
     }
+
+    @Transactional
+    @PutMapping("/{restauranteId}/ativo")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void ativar(@PathVariable Long restauranteId) {
+        restauranteService.ativar(restauranteId);
+    }
+
+    @Transactional
+    @DeleteMapping("/{restauranteId}/ativo")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void inativar(@PathVariable Long restauranteId) {
+        restauranteService.inativar(restauranteId);
+    }
 }

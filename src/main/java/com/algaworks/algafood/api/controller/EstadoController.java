@@ -69,6 +69,7 @@ public class EstadoController {
 
     @Transactional
     @DeleteMapping("{estadoId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void remover(@PathVariable Long estadoId) {
         estadoService.remover(estadoId);
     }
