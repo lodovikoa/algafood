@@ -31,11 +31,17 @@ public class RestauranteService {
     CozinhaService cozinhaService;
 
     @Autowired
+    CidadeService cidadeService;
+
+    @Autowired
     private SmartValidator validator;
 
     public Restaurante salvar(Restaurante restaurante) {
         var cozinha = cozinhaService.buscarOuFalhar(restaurante.getCozinha().getId());
+        var cidade = cidadeService.buscarOuFalhar(restaurante.getEndereco().getCidade().getId());
+
         restaurante.setCozinha(cozinha);
+        restaurante.getEndereco().setCidade(cidade);
         return restauranteRespository.save(restaurante) ;
     }
 
