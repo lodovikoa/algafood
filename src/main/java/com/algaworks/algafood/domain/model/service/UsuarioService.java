@@ -24,6 +24,18 @@ public class UsuarioService {
     }
 
     public Usuario salvar (Usuario usuario) {
+
+        if(usuarioRepository.existsByEmailAndIdNot(usuario.getEmail(), usuario.getId())) {
+            throw new NegocioException(String.format("Já existe um usuário cadastrado com o Email %s", usuario.getEmail()));
+        }
+
+//        usuarioRepository.detach(usuario);
+//
+//        var usuarioExistente = usuarioRepository.findByEmail(usuario.getEmail());
+//        if(usuarioExistente.isPresent() && !usuarioExistente.get().equals(usuario)) {
+//            throw new NegocioException(String.format("Já existe um usuário cadastrado com o Email %s", usuario.getEmail()));
+//        }
+
         return  usuarioRepository.save(usuario);
     }
 

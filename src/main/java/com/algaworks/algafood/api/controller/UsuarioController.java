@@ -62,7 +62,7 @@ public class UsuarioController {
     public UsuarioModelDTO atualizar(@PathVariable Long usuarioId, @RequestBody @Valid UsuarioInputDTO usuarioInputDTO) {
         var usuarioAtual = usuarioService.buscarOuFalhar(usuarioId);
         usuarioInputDisassembler.copyDomainObject(usuarioInputDTO, usuarioAtual);
-     //   usuarioAtual = usuarioService.salvar(usuarioAtual);
+        usuarioAtual = usuarioService.salvar(usuarioAtual);
 
         return usuarioModelDTOAssembler.toModel(usuarioAtual);
     }
