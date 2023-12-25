@@ -48,11 +48,19 @@ public class GrupoController {
     }
 
     @Transactional
-    @PutMapping("/{idGrupo}")
-    public GrupoModelDTO alterar(@Valid @RequestBody GrupoInputDTO grupoInputDTO, @PathVariable Long idGrupo) {
-        var grupoOriginal = grupoService.buscarOuFalhar(idGrupo);
+    @PutMapping("/{grupoId}")
+    public GrupoModelDTO alterar(@Valid @RequestBody GrupoInputDTO grupoInputDTO, @PathVariable Long grupoId) {
+        var grupoOriginal = grupoService.buscarOuFalhar(grupoId);
         grupoInputDTODisassembler.copyDomainObject(grupoInputDTO, grupoOriginal);
         var grupo = grupoService.salvar(grupoOriginal);
         return grupoModelDTOAssembler.dtoModel(grupo);
     }
+
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Transactional
+    @DeleteMapping("{grupoId}")
+    public void excluir(@PathVariable Long grupoId) {
+        grupoService.excluir(grupoId);
+    }
+
 }

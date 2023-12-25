@@ -11,6 +11,7 @@ delete from tb_produto;
 delete from tb_restaurante;
 delete from tb_restaurante_forma_pagamento;
 delete from tb_usuario_grupo;
+delete from tb_usuario;
 
 set foreign_key_checks = 1;
 
@@ -22,6 +23,7 @@ alter table tb_grupo auto_increment = 1;
 alter table tb_permissao auto_increment = 1;
 alter table tb_produto auto_increment = 1;
 alter table tb_restaurante auto_increment = 1;
+alter table tb_usuario auto_increment = 1;
 
 insert into tb_cozinha (id, nome) values (1, 'Tailandesa');
 insert into tb_cozinha (id, nome) values (2, 'Indiana');
@@ -65,3 +67,9 @@ insert into tb_produto (nome, descricao, preco, ativo, restaurante_id) values ('
 insert into tb_produto (nome, descricao, preco, ativo, restaurante_id) values ('Espetinho de Cupim', 'Acompanha farinha, mandioca e vinagrete', 8, 1, 6);
 
 insert into tb_grupo (nome) values ('Gerente'), ('Vendedor'), ('Secretária'), ('Cadastrador');
+
+insert into tb_usuario (id, nome, email, senha, data_cadastro) values
+(1, 'João da Silva', 'joao.ger@algafood.com', '123', utc_timestamp),
+(2, 'Maria Joaquina', 'maria.vnd@algafood.com', '123', utc_timestamp),
+(3, 'José Souza', 'jose.aux@algafood.com', '123', utc_timestamp),
+(4, 'Sebastião Martins', 'sebastiao.cad@algafood.com', '123', utc_timestamp);
