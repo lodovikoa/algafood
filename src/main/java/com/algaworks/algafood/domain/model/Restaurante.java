@@ -18,7 +18,9 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -58,7 +60,7 @@ public class Restaurante implements Serializable {
 
     @ManyToMany
     @JoinTable(name = "tb_restaurante_forma_pagamento",joinColumns = @JoinColumn(name = "restaurante_id"), inverseJoinColumns = @JoinColumn(name = "forma_pagamento_id"))
-    private List<FormaPagamento> formaPagamentos = new ArrayList<>();
+    private Set<FormaPagamento> formaPagamentos = new HashSet<>();
 
     @OneToMany(mappedBy = "restaurante")
     private List<Produto> produtos = new ArrayList<>();
@@ -69,5 +71,13 @@ public class Restaurante implements Serializable {
 
     public void inativar() {
         this.setAtivo(false);
+    }
+
+    public void removerFormaPagamento(FormaPagamento formaPagamento) {
+        this.formaPagamentos.remove(formaPagamento);
+    }
+
+    public void adicionarFormaPagamento(FormaPagamento formaPagamento) {
+        this.formaPagamentos.add(formaPagamento);
     }
 }

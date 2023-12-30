@@ -1,11 +1,8 @@
 package com.algaworks.algafood.domain.model.service;
 
 import com.algaworks.algafood.core.validation.ValidacaoException;
-import com.algaworks.algafood.domain.model.Cozinha;
 import com.algaworks.algafood.domain.model.Restaurante;
-import com.algaworks.algafood.domain.model.exception.EntidadeNaoEncontradaException;
 import com.algaworks.algafood.domain.model.exception.RestauranteNaoEncontradoException;
-import com.algaworks.algafood.domain.model.repository.CozinhaRepository;
 import com.algaworks.algafood.domain.model.repository.RestauranteRepository;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -26,13 +23,12 @@ import java.util.Map;
 public class RestauranteService {
     @Autowired
     RestauranteRepository restauranteRespository;
-
     @Autowired
     CozinhaService cozinhaService;
-
     @Autowired
     CidadeService cidadeService;
-
+    @Autowired
+    FormaPagamentoService formaPagamentoService;
     @Autowired
     private SmartValidator validator;
 
@@ -94,6 +90,20 @@ public class RestauranteService {
     public void inativar(Long restauranteId) {
         Restaurante restauranteAtual = this.buscarOuFalhar(restauranteId);
         restauranteAtual.inativar();
+    }
+
+    public void desassociarFormaPagamento(Long restauranteId, Long formaPagamentoId) {
+        var restaurante = this.buscarOuFalhar(restauranteId);
+        var formaPagamento = formaPagamentoService.buscarOuFalhar(formaPagamentoId);
+
+        restaurante.removerFormaPagamento(formaPagamento);
+    }
+
+    public void associarFormaPagamento(Long restauranteId, Long formaPagamentoId) {
+        var restaurante = this.buscarOuFalhar(restauranteId);
+        var formaPagamento = formaPagamentoService.buscarOuFalhar(formaPagamentoId);
+
+        restaurante.adicionarFormaPagamento(formaPagamento);
     }
 
     public Restaurante buscarOuFalhar(Long restauranteId) {
