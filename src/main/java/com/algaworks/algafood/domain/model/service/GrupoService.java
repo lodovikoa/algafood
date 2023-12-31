@@ -17,6 +17,8 @@ public class GrupoService {
     private static final String MSG_GRUPO_EM_USO = "Grupo com código %d não pode ser removido, pois está em uso";
     @Autowired
     private GrupoRepository grupoRepository;
+    @Autowired
+    private PermissaoService permissaoService;
 
     public List<Grupo> listar() {
         return grupoRepository.findAll();
@@ -42,5 +44,17 @@ public class GrupoService {
     public Grupo buscarOuFalhar(Long idGrupo) {
         return grupoRepository.findById(idGrupo)
                 .orElseThrow(() -> new GrupoNaoEncontradoException(idGrupo));
+    }
+
+    public void desassociarPermissao(Long grupoId, Long permissaoId) {
+        var grupo = this.buscarOuFalhar(grupoId);
+        var permissao = permissaoService.buscarOuFalhar(permissaoId);
+        grupo.removerPermissao(permissao);
+    }
+
+    public void associarPermissao(Long grupoId, Long permissaoId) {
+        var grupo = this.buscarOuFalhar(grupoId);
+        var permissao = permissaoService.buscarOuFalhar(permissaoId);
+        grupo.adicionarPermissao(permissao);
     }
 }
