@@ -1,7 +1,7 @@
 package com.algaworks.algafood.api.controller;
 
-import com.algaworks.algafood.api.assembler.RestauranteInputDtoDisassembler;
-import com.algaworks.algafood.api.assembler.RestauranteModelDtoAssembler;
+import com.algaworks.algafood.api.assembler.RestauranteInputDTODisassembler;
+import com.algaworks.algafood.api.assembler.RestauranteModelDTOAssembler;
 import com.algaworks.algafood.api.dto.input.RestauranteInputDTO;
 import com.algaworks.algafood.api.dto.model.RestauranteModelDTO;
 import com.algaworks.algafood.domain.model.Restaurante;
@@ -11,7 +11,6 @@ import com.algaworks.algafood.domain.model.repository.RestauranteRepository;
 import com.algaworks.algafood.domain.model.service.RestauranteService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -32,10 +31,10 @@ public class RestauranteController {
     private RestauranteService restauranteService;
 
     @Autowired
-    private RestauranteModelDtoAssembler restauranteModelDtoAssembler;
+    private RestauranteModelDTOAssembler restauranteModelDtoAssembler;
 
     @Autowired
-    private RestauranteInputDtoDisassembler restauranteInputDtoDisassembler;
+    private RestauranteInputDTODisassembler restauranteInputDtoDisassembler;
 
     @GetMapping
     public List<RestauranteModelDTO> listar() {
@@ -92,5 +91,19 @@ public class RestauranteController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void inativar(@PathVariable Long restauranteId) {
         restauranteService.inativar(restauranteId);
+    }
+
+    @Transactional
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PutMapping("/{restauranteId}/abertura")
+    public void abrirRestaurente(@PathVariable Long restauranteId) {
+        restauranteService.abrirRestaurante(restauranteId);
+    }
+
+    @Transactional
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PutMapping("/{restauranteId}/fechamento")
+    public void fecharRestaurente(@PathVariable Long restauranteId) {
+        restauranteService.fecharRestaurante(restauranteId);
     }
 }

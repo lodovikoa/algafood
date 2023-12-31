@@ -13,5 +13,6 @@ public class RestauranteModelDTO{
         BigDecimal taxaFrete;
         CozinhaModelDTO cozinha;
         Boolean ativo;
+        Boolean aberto;
         EnderecoModelDTO endereco;
 }

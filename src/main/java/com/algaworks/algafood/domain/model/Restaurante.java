@@ -50,6 +50,8 @@ public class Restaurante implements Serializable {
 
     private Boolean ativo = Boolean.TRUE;
 
+    private Boolean aberto = Boolean.TRUE;
+
     @CreationTimestamp
     @Column(nullable = false, columnDefinition = "datetime")
     private OffsetDateTime dataCadastro;
@@ -71,6 +73,14 @@ public class Restaurante implements Serializable {
 
     public void inativar() {
         this.setAtivo(false);
+    }
+
+    public void abrir() {
+        this.setAberto(true);
+    }
+
+    public void fechar() {
+        this.setAberto(false);
     }
 
     public void removerFormaPagamento(FormaPagamento formaPagamento) {

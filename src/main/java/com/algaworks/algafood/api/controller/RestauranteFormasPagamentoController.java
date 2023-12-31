@@ -1,26 +1,14 @@
 package com.algaworks.algafood.api.controller;
 
 import com.algaworks.algafood.api.assembler.FormaPagamentoModelDTOAssembler;
-import com.algaworks.algafood.api.assembler.RestauranteInputDtoDisassembler;
-import com.algaworks.algafood.api.assembler.RestauranteModelDtoAssembler;
-import com.algaworks.algafood.api.dto.input.RestauranteInputDTO;
 import com.algaworks.algafood.api.dto.model.FormaPagamentoModelDTO;
-import com.algaworks.algafood.api.dto.model.RestauranteModelDTO;
-import com.algaworks.algafood.domain.model.Restaurante;
-import com.algaworks.algafood.domain.model.exception.EntidadeNaoEncontradaException;
-import com.algaworks.algafood.domain.model.exception.NegocioException;
-import com.algaworks.algafood.domain.model.repository.RestauranteRepository;
 import com.algaworks.algafood.domain.model.service.RestauranteService;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/restaurantes/{restauranteId}/formas-pagamento")

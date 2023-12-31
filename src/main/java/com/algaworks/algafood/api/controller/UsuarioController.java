@@ -1,6 +1,6 @@
 package com.algaworks.algafood.api.controller;
 
-import com.algaworks.algafood.api.assembler.UsuarioInputDisassembler;
+import com.algaworks.algafood.api.assembler.UsuarioInputDTODisassembler;
 import com.algaworks.algafood.api.assembler.UsuarioModelDTOAssembler;
 import com.algaworks.algafood.api.dto.input.UsuarioComSenhaInputDTO;
 import com.algaworks.algafood.api.dto.input.UsuarioInputDTO;
@@ -26,7 +26,7 @@ public class UsuarioController {
     private UsuarioModelDTOAssembler usuarioModelDTOAssembler;
 
     @Autowired
-    private UsuarioInputDisassembler usuarioInputDisassembler;
+    private UsuarioInputDTODisassembler usuarioInputDisassembler;
 
     @GetMapping
     public List<UsuarioModelDTO> listar() {

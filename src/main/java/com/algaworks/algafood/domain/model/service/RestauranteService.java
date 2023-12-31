@@ -106,6 +106,14 @@ public class RestauranteService {
         restaurante.adicionarFormaPagamento(formaPagamento);
     }
 
+    public void abrirRestaurante(Long restauranteId) {
+       this.buscarOuFalhar(restauranteId).abrir();
+    }
+
+    public void fecharRestaurante(Long restauranteId) {
+       this.buscarOuFalhar(restauranteId).fechar();
+    }
+
     public Restaurante buscarOuFalhar(Long restauranteId) {
         return restauranteRespository.findById(restauranteId)
                 .orElseThrow(() -> new RestauranteNaoEncontradoException(restauranteId));
