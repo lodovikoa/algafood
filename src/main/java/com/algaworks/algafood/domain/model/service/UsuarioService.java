@@ -18,6 +18,8 @@ public class UsuarioService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+    @Autowired
+    private GrupoService grupoService;
 
     public List<Usuario> listar () {
         return usuarioRepository.findAll();
@@ -28,13 +30,6 @@ public class UsuarioService {
         if(usuarioRepository.existsByEmailAndIdNot(usuario.getEmail(), usuario.getId())) {
             throw new NegocioException(String.format("Já existe um usuário cadastrado com o Email %s", usuario.getEmail()));
         }
-
-//        usuarioRepository.detach(usuario);
-//
-//        var usuarioExistente = usuarioRepository.findByEmail(usuario.getEmail());
-//        if(usuarioExistente.isPresent() && !usuarioExistente.get().equals(usuario)) {
-//            throw new NegocioException(String.format("Já existe um usuário cadastrado com o Email %s", usuario.getEmail()));
-//        }
 
         return  usuarioRepository.save(usuario);
     }
@@ -63,5 +58,19 @@ public class UsuarioService {
         }
 
         usuario.setSenha(novaSenha);
+    }
+
+    public void desassociarGrupo(Long usuarioId, Long grupoId) {
+        var usuario = this.buscarOuFalhar(usuarioId);
+        var grupo = this.grupoService.buscarOuFalhar(grupoId);
+
+        usuario.removerGrupo(grupo);
+    }
+
+    public void associarGrupo(Long usuarioId, Long grupoId) {
+        var usuario = this.buscarOuFalhar(usuarioId);
+        var grupo = grupoService.buscarOuFalhar(grupoId);
+
+        usuario.adicionarGrupo(grupo);
     }
 }
