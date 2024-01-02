@@ -30,6 +30,8 @@ public class RestauranteService {
     @Autowired
     FormaPagamentoService formaPagamentoService;
     @Autowired
+    private UsuarioService usuarioService;
+    @Autowired
     private SmartValidator validator;
 
     public Restaurante salvar(Restaurante restaurante) {
@@ -119,4 +121,17 @@ public class RestauranteService {
                 .orElseThrow(() -> new RestauranteNaoEncontradoException(restauranteId));
     }
 
+    public void desassociarResponsavel(Long restauranteId, Long usuarioId) {
+        var restaurante = this.buscarOuFalhar(restauranteId);
+        var usuario = usuarioService.buscarOuFalhar(usuarioId);
+
+        restaurante.removerResponsavel(usuario);
+    }
+
+    public void associarResponsavel(Long restauranteId, Long usuarioId) {
+        var restaurante = this.buscarOuFalhar(restauranteId);
+        var usuario = usuarioService.buscarOuFalhar(usuarioId);
+
+        restaurante.adicionarResponsavel(usuario);
+    }
 }

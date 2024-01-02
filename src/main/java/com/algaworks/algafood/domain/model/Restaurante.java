@@ -61,12 +61,20 @@ public class Restaurante implements Serializable {
     private OffsetDateTime dataAtualizacao;
 
     @ManyToMany
-    @JoinTable(name = "tb_restaurante_forma_pagamento",joinColumns = @JoinColumn(name = "restaurante_id"), inverseJoinColumns = @JoinColumn(name = "forma_pagamento_id"))
+    @JoinTable(name = "tb_restaurante_forma_pagamento", joinColumns = @JoinColumn(name = "restaurante_id"), inverseJoinColumns = @JoinColumn(name = "forma_pagamento_id"))
     private Set<FormaPagamento> formaPagamentos = new HashSet<>();
 
     @OneToMany(mappedBy = "restaurante")
     private List<Produto> produtos = new ArrayList<>();
 
+    @ManyToMany
+    @JoinTable(name = "tb_restaurante_usuario_responsavel", joinColumns = @JoinColumn(name = "restaurante_id"), inverseJoinColumns = @JoinColumn(name = "usuario_id"))
+    private Set<Usuario> responsaveis = new HashSet<>();
+
+
+    /*
+    *  Métodos
+    * */
     public void ativar() {
         this.setAtivo(true);
     }
@@ -89,5 +97,13 @@ public class Restaurante implements Serializable {
 
     public void adicionarFormaPagamento(FormaPagamento formaPagamento) {
         this.formaPagamentos.add(formaPagamento);
+    }
+
+    public boolean removerResponsavel(Usuario usuario) {
+        return responsaveis.remove(usuario);
+    }
+
+    public boolean adicionarResponsavel(Usuario usuario) {
+        return responsaveis.add(usuario);
     }
 }
