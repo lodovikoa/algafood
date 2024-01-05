@@ -95,6 +95,20 @@ public class RestauranteController {
 
     @Transactional
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PutMapping("/ativacoes")
+    public void ativacoes(@RequestBody List<Long> restauranteIds) {
+        restauranteService.ativacoes(restauranteIds);
+    }
+
+    @Transactional
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @DeleteMapping("/inativacoes")
+    public void inativacoes(@RequestBody List<Long> restauranteIds) {
+        restauranteService.inativacoes(restauranteIds);
+    }
+
+    @Transactional
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @PutMapping("/{restauranteId}/abertura")
     public void abrirRestaurente(@PathVariable Long restauranteId) {
         restauranteService.abrirRestaurante(restauranteId);

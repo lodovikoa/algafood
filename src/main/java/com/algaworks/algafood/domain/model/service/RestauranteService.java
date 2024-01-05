@@ -2,6 +2,7 @@ package com.algaworks.algafood.domain.model.service;
 
 import com.algaworks.algafood.core.validation.ValidacaoException;
 import com.algaworks.algafood.domain.model.Restaurante;
+import com.algaworks.algafood.domain.model.exception.NegocioException;
 import com.algaworks.algafood.domain.model.exception.RestauranteNaoEncontradoException;
 import com.algaworks.algafood.domain.model.repository.RestauranteRepository;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -17,6 +18,7 @@ import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.SmartValidator;
 
 import java.lang.reflect.Field;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -92,6 +94,22 @@ public class RestauranteService {
     public void inativar(Long restauranteId) {
         Restaurante restauranteAtual = this.buscarOuFalhar(restauranteId);
         restauranteAtual.inativar();
+    }
+
+    public void ativacoes(List<Long> restauranteIds) {
+        try {
+            restauranteIds.forEach(this::ativar);
+        }catch (RestauranteNaoEncontradoException e) {
+            throw new NegocioException(e.getMessage(), e);
+        }
+    }
+
+    public void inativacoes(List<Long> restauranteIds) {
+        try{
+            restauranteIds.forEach(this::inativar);
+        }catch (RestauranteNaoEncontradoException e) {
+            throw new NegocioException(e.getMessage(), e);
+        }
     }
 
     public void desassociarFormaPagamento(Long restauranteId, Long formaPagamentoId) {

@@ -106,4 +106,12 @@ public class Restaurante implements Serializable {
     public boolean adicionarResponsavel(Usuario usuario) {
         return responsaveis.add(usuario);
     }
+
+    public boolean aceitaFormaPagamento(FormaPagamento formaPagamento) {
+        return formaPagamentos.contains(formaPagamento);
+    }
+
+    public boolean naoAceitaFormaPagamento(FormaPagamento formaPagamento) {
+        return !this.aceitaFormaPagamento(formaPagamento);
+    }
 }
