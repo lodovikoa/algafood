@@ -7,6 +7,6 @@ public class FormaPagamentoNaoEncontradoException extends EntidadeNaoEncontradaE
     }
 
     public FormaPagamentoNaoEncontradoException(Long formaPagamentoId) {
-        this(String.format("Não existe um cadastro de Cidade com ID %d", formaPagamentoId));
+        this(String.format("Não existe um cadastro de Forma de Pagamento com ID %d", formaPagamentoId));
     }
 }

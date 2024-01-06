@@ -1,7 +1,9 @@
 package com.algaworks.algafood.core.modelmapper;
 
+import com.algaworks.algafood.api.dto.input.ItemPedidoInputDTO;
 import com.algaworks.algafood.api.dto.model.EnderecoModelDTO;
 import com.algaworks.algafood.domain.model.Endereco;
+import com.algaworks.algafood.domain.model.ItemPedido;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,6 +20,8 @@ public class ModelMapperConfig {
                  enderecoSrc -> enderecoSrc.getCidade().getEstado().getNome(),
                 (enderecoModelDest, value) -> enderecoModelDest.getCidade().setEstado(value)
         );
+
+        modelMapper.createTypeMap(ItemPedidoInputDTO.class, ItemPedido.class).addMappings(mapper -> mapper.skip(ItemPedido::setId));
 
         return modelMapper;
     }

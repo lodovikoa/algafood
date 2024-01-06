@@ -38,7 +38,7 @@ public class Pedido {
     private OffsetDateTime dataCancelamento;
     private OffsetDateTime dataEntrega;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "forma_pagamento_id", nullable = false)
     private FormaPagamento formaPagamento;
 
@@ -50,19 +50,21 @@ public class Pedido {
     @JoinColumn(name = "usuario_cliente_id", nullable = false)
     private Usuario cliente;
 
-    @OneToMany(mappedBy = "pedido")
+    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
     private List<ItemPedido> itens = new ArrayList<>();
 
     // Métodos
     public void calcularValorTotal() {
+        itens.forEach(ItemPedido::calcularPrecoTotal);
         this.subtotal = itens.stream().map(item -> item.getPrecoTotal()).reduce(BigDecimal.ZERO, BigDecimal::add);
+        this.valorTotal = this.subtotal.add(this.taxaFrete);
     }
 
-    public void definirFrete() {
-        taxaFrete = restaurante.getTaxaFrete();
-    }
+//    public void definirFrete() {
+//        taxaFrete = restaurante.getTaxaFrete();
+//    }
 
-    public void atribuirPedidosAosItens() {
-        itens.forEach(item -> item.setPedido(this));
-    }
+//    public void atribuirPedidosAosItens() {
+//        itens.forEach(item -> item.setPedido(this));
+//    }
 }

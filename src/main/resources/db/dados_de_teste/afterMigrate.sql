@@ -27,6 +27,8 @@ alter table tb_permissao auto_increment = 1;
 alter table tb_produto auto_increment = 1;
 alter table tb_restaurante auto_increment = 1;
 alter table tb_usuario auto_increment = 1;
+alter table tb_pedido auto_increment = 1;
+alter table tb_item_pedido auto_increment = 1;
 
 insert into tb_cozinha (id, nome) values (1, 'Tailandesa');
 insert into tb_cozinha (id, nome) values (2, 'Indiana');
