@@ -1,5 +1,6 @@
 package com.algaworks.algafood.domain.model;
 
+import com.algaworks.algafood.domain.model.exception.NegocioException;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -60,11 +61,27 @@ public class Pedido {
         this.valorTotal = this.subtotal.add(this.taxaFrete);
     }
 
-//    public void definirFrete() {
-//        taxaFrete = restaurante.getTaxaFrete();
-//    }
+    public void confirmar() {
+        this.setStatus( StatusPedido.CONFIRMADO);
+        this.dataConfirmacao = OffsetDateTime.now();
+    }
 
-//    public void atribuirPedidosAosItens() {
-//        itens.forEach(item -> item.setPedido(this));
-//    }
+    public void entregar() {
+        this.setStatus(StatusPedido.ENTREGUE);
+        this.dataEntrega = OffsetDateTime.now();
+    }
+
+    public void cancelar() {
+        this.setStatus(StatusPedido.CANCELADO);
+        this.dataCancelamento = OffsetDateTime.now();
+    }
+
+    private void setStatus(StatusPedido novoStatus) {
+        if(status.naoPodeAlterarPara(novoStatus)) {
+            throw new NegocioException(String.format("Status do pedido %d não pode ser alterado de %s para %s", id, this.status.getDescricao(), novoStatus.getDescricao()));
+        }
+
+        this.status = novoStatus;
+    }
+
 }
