@@ -40,8 +40,8 @@ public class PedidoEmissaoService {
         return pedidoRepository.save(pedido);
     }
 
-    public Pedido buscarOuFalhar(Long pedidoId) {
-        return pedidoRepository.findById(pedidoId).orElseThrow(() -> new PedidoNaoEncontradoException(pedidoId));
+    public Pedido buscarOuFalhar(String pedidoCodigo) {
+        return pedidoRepository.findByCodigo(pedidoCodigo).orElseThrow(() -> new PedidoNaoEncontradoException(pedidoCodigo));
     }
 
     private void validarPedido(Pedido pedido) {

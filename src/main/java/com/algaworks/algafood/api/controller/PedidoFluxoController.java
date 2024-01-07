@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/pedidos/{pedidoId}")
+@RequestMapping("/pedidos/{pedidoCodigo}")
 public class PedidoFluxoController {
 
     @Autowired
@@ -16,21 +16,21 @@ public class PedidoFluxoController {
     @Transactional
     @PutMapping("/confirmacao")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void confirmar(@PathVariable Long pedidoId) {
-        pedidoFluxoService.confirmar(pedidoId);
+    public void confirmar(@PathVariable String pedidoCodigo) {
+        pedidoFluxoService.confirmar(pedidoCodigo);
     }
 
     @Transactional
     @PutMapping("/entrega")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void entregar(@PathVariable Long pedidoId) {
-        pedidoFluxoService.entregar(pedidoId);
+    public void entregar(@PathVariable String pedidoCodigo) {
+        pedidoFluxoService.entregar(pedidoCodigo);
     }
 
     @Transactional
     @PutMapping("/cancelamento")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void cancelar(@PathVariable Long pedidoId) {
-        pedidoFluxoService.cancelar(pedidoId);
+    public void cancelar(@PathVariable String pedidoCodigo) {
+        pedidoFluxoService.cancelar(pedidoCodigo);
     }
 }

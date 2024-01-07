@@ -13,18 +13,18 @@ public class PedidoFluxoService {
     @Autowired
     private PedidoEmissaoService pedidoEmissaoService;
 
-    public void confirmar(Long pedidoId) {
-        var pedido = pedidoEmissaoService.buscarOuFalhar(pedidoId);
+    public void confirmar(String pedidoCodigo) {
+        var pedido = pedidoEmissaoService.buscarOuFalhar(pedidoCodigo);
         pedido.confirmar();
     }
 
-    public void entregar(Long pedidoId) {
-        var pedido = pedidoEmissaoService.buscarOuFalhar(pedidoId);
+    public void entregar(String pedidoCodigo) {
+        var pedido = pedidoEmissaoService.buscarOuFalhar(pedidoCodigo);
         pedido.entregar();
     }
 
-    public void cancelar(Long pedidoId) {
-        var pedido = pedidoEmissaoService.buscarOuFalhar(pedidoId);
+    public void cancelar(String pedidoCodigo) {
+        var pedido = pedidoEmissaoService.buscarOuFalhar(pedidoCodigo);
         pedido.cancelar();
     }
 }
