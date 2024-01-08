@@ -152,4 +152,8 @@ public class RestauranteService {
 
         restaurante.adicionarResponsavel(usuario);
     }
+
+    public List<Restaurante> findAll() {
+        return restauranteRespository.findAll();
+    }
 }
