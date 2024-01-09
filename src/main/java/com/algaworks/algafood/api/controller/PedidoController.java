@@ -36,28 +36,28 @@ public class PedidoController {
     @Autowired
     private PedidoInputDTODisassembler pedidoInputDTODisassembler;
 
-    @GetMapping
-    public MappingJacksonValue listar(@RequestParam(required = false) String campos) {
-        var pedidosModel = pedidoResumoModelDTOAssembler.toCollectionModel(pedidoEmissaoService.findAll());
-        var pedidosWrapper = new MappingJacksonValue(pedidosModel);
-
-        var filterProvider = new SimpleFilterProvider();
-        filterProvider.addFilter("pedidoFilter", SimpleBeanPropertyFilter.serializeAll());
-
-        if(StringUtils.isNotBlank(campos)) {
-            filterProvider.addFilter("pedidoFilter", SimpleBeanPropertyFilter.filterOutAllExcept(campos.split(",")));
-        }
-
-        pedidosWrapper.setFilters(filterProvider);
-
-        return pedidosWrapper;
-    }
-
 //    @GetMapping
-//    public List<PedidoResumoModelDTO> listar() {
-//        var todosPedidos = pedidoEmissaoService.findAll();
-//        return pedidoResumoModelDTOAssembler.toCollectionModel(todosPedidos);
+//    public MappingJacksonValue listar(@RequestParam(required = false) String campos) {
+//        var pedidosModel = pedidoResumoModelDTOAssembler.toCollectionModel(pedidoEmissaoService.findAll());
+//        var pedidosWrapper = new MappingJacksonValue(pedidosModel);
+//
+//        var filterProvider = new SimpleFilterProvider();
+//        filterProvider.addFilter("pedidoFilter", SimpleBeanPropertyFilter.serializeAll());
+//
+//        if(StringUtils.isNotBlank(campos)) {
+//            filterProvider.addFilter("pedidoFilter", SimpleBeanPropertyFilter.filterOutAllExcept(campos.split(",")));
+//        }
+//
+//        pedidosWrapper.setFilters(filterProvider);
+//
+//        return pedidosWrapper;
 //    }
+
+    @GetMapping
+    public List<PedidoResumoModelDTO> listar() {
+        var todosPedidos = pedidoEmissaoService.findAll();
+        return pedidoResumoModelDTOAssembler.toCollectionModel(todosPedidos);
+    }
 
     @GetMapping("/{pedidoCodigo}")
     public PedidoModelDTO buscarPedido(@PathVariable String pedidoCodigo) {

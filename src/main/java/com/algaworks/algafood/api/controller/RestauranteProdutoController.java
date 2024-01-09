@@ -28,10 +28,9 @@ public class RestauranteProdutoController {
     private ProdutoInputDTODisassembler produtoInputDTODisassembler;
 
     @GetMapping
-    public List<ProdutoModelDTO> listar(@PathVariable Long restauranteId) {
+    public List<ProdutoModelDTO> listar(@PathVariable Long restauranteId, @RequestParam(required = false) boolean incluirInativos) {
         var restaurante = restauranteService.buscarOuFalhar(restauranteId);
-        var todosProdutos = produtoService.findByRestaurante(restaurante);
-        return produtoModelDTOAssembler.toCollectionMode(todosProdutos);
+        return produtoModelDTOAssembler.toCollectionMode(produtoService.findByRestaurante(restaurante, incluirInativos));
     }
 
     @GetMapping("/{produtoId}")

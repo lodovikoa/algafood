@@ -30,7 +30,15 @@ public class ProdutoService {
                 .orElseThrow(() -> new ProdutoNaoEncontradoException(restauranteId, produtoId));
     }
 
-    public List<Produto> findByRestaurante(Restaurante restaurante) {
-        return produtoRepository.findByRestaurante(restaurante);
+    public List<Produto> findByRestaurante(Restaurante restaurante, boolean incluirInativos) {
+        List<Produto> todosProdutos = null;
+
+        if(incluirInativos) {
+            todosProdutos = produtoRepository.findTodosByRestaurante(restaurante);
+        } else {
+            todosProdutos = produtoRepository.findAtivoByRestaurante(restaurante);
+        }
+
+        return todosProdutos;
     }
 }

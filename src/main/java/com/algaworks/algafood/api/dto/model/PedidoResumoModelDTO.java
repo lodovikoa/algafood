@@ -10,7 +10,7 @@ import java.util.List;
 
 @Getter
 @Setter
-@JsonFilter("pedidoFilter")
+// @JsonFilter("pedidoFilter")
 public class PedidoResumoModelDTO {
 
     private String codigo;
