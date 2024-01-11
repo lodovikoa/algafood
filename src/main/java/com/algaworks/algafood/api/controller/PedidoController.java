@@ -9,6 +9,7 @@ import com.algaworks.algafood.api.dto.model.PedidoResumoModelDTO;
 import com.algaworks.algafood.domain.model.Usuario;
 import com.algaworks.algafood.domain.model.exception.EntidadeNaoEncontradaException;
 import com.algaworks.algafood.domain.model.exception.NegocioException;
+import com.algaworks.algafood.domain.model.repository.filter.PedidoFilter;
 import com.algaworks.algafood.domain.model.service.PedidoEmissaoService;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
@@ -54,8 +55,8 @@ public class PedidoController {
 //    }
 
     @GetMapping
-    public List<PedidoResumoModelDTO> listar() {
-        var todosPedidos = pedidoEmissaoService.findAll();
+    public List<PedidoResumoModelDTO> pesquisar(PedidoFilter filtro) {
+        var todosPedidos = pedidoEmissaoService.findAll(filtro);
         return pedidoResumoModelDTOAssembler.toCollectionModel(todosPedidos);
     }
 

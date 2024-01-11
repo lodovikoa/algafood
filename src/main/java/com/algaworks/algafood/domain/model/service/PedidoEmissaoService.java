@@ -5,6 +5,8 @@ import com.algaworks.algafood.domain.model.Produto;
 import com.algaworks.algafood.domain.model.exception.NegocioException;
 import com.algaworks.algafood.domain.model.exception.PedidoNaoEncontradoException;
 import com.algaworks.algafood.domain.model.repository.PedidoRepository;
+import com.algaworks.algafood.domain.model.repository.filter.PedidoFilter;
+import com.algaworks.algafood.infrastructue.repository.spec.PedidoSpecs;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,8 +28,9 @@ public class PedidoEmissaoService {
     @Autowired
     private FormaPagamentoService formaPagamentoService;
 
-    public List<Pedido> findAll() {
-        return pedidoRepository.findAll();
+    public List<Pedido> findAll(PedidoFilter filtro) {
+        var pedidos = pedidoRepository.findAll(PedidoSpecs.usandoFiltro(filtro));
+        return pedidos;
     }
 
     public Pedido emitir(Pedido pedido) {
