@@ -13,6 +13,10 @@ import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -40,9 +44,11 @@ public class CozinhaController {
     private CozinhaInputDTODisassembler cozinhaInputDTODisassembler;
 
     @GetMapping
-    public List<CozinhaModelDTO> listar() {
-        var cozinhas = cozinhaRepository.findAll();
-        return cozinhaModelDTOAssembler.toCollectionModel(cozinhas);
+    public Page<CozinhaModelDTO> listar(@PageableDefault(size = 10) Pageable pageable) {
+        var cozinhasPage = cozinhaRepository.findAll(pageable);
+        var cozinhasModel = cozinhaModelDTOAssembler.toCollectionModel(cozinhasPage.getContent());
+        Page<CozinhaModelDTO> cozinhasModelPage = new PageImpl<>(cozinhasModel, pageable, cozinhasPage.getTotalElements());
+        return cozinhasModelPage;
     }
 
     @GetMapping("/{cozinhaId}")
