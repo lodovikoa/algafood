@@ -1,4 +1,4 @@
-package com.algaworks.algafood.infrastructue.service;
+package com.algaworks.algafood.infrastructue.service.query;
 
 import com.algaworks.algafood.api.dto.VendaDiaria;
 import com.algaworks.algafood.domain.model.Pedido;
