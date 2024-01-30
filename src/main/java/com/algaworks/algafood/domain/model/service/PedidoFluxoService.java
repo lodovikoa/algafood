@@ -12,15 +12,26 @@ public class PedidoFluxoService {
 
     @Autowired
     private PedidoEmissaoService pedidoEmissaoService;
+    @Autowired
+    private EnvioEmailService envioEmailService;
 
     public void confirmar(String pedidoCodigo) {
         var pedido = pedidoEmissaoService.buscarOuFalhar(pedidoCodigo);
         pedido.confirmar();
+
+        var mensagem = EnvioEmailService.Mensagem.builder()
+                .assunto(pedido.getRestaurante().getNome() + " - Pedido confirmado")
+                .corpo("O pedido de código <strong>" + pedido.getCodigo() + "</strong> foi confirmado!")
+                .destinatario(pedido.getCliente().getEmail())
+                .build();
+
+        envioEmailService.enviar(mensagem);
     }
 
     public void entregar(String pedidoCodigo) {
         var pedido = pedidoEmissaoService.buscarOuFalhar(pedidoCodigo);
         pedido.entregar();
+
     }
 
     public void cancelar(String pedidoCodigo) {
