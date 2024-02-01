@@ -5,15 +5,11 @@ import com.algaworks.algafood.api.assembler.EstadoModelDTOAssembler;
 import com.algaworks.algafood.api.dto.input.EstadoInputDTO;
 import com.algaworks.algafood.api.dto.model.EstadoModelDTO;
 import com.algaworks.algafood.domain.model.Estado;
-import com.algaworks.algafood.domain.model.exception.EntidadeEmUsoException;
-import com.algaworks.algafood.domain.model.exception.EntidadeNaoEncontradaException;
-import com.algaworks.algafood.domain.model.repository.EstadoRepository;
-import com.algaworks.algafood.domain.model.service.EstadoService;
+import com.algaworks.algafood.domain.repository.EstadoRepository;
+import com.algaworks.algafood.domain.service.EstadoService;
 import jakarta.validation.Valid;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 

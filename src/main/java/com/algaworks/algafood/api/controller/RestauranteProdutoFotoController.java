@@ -4,10 +4,10 @@ import com.algaworks.algafood.api.assembler.FotoProdutoModelDTOAssembler;
 import com.algaworks.algafood.api.dto.input.FotoProdutoInput;
 import com.algaworks.algafood.api.dto.model.FotoProdutoModelDTO;
 import com.algaworks.algafood.domain.model.FotoProduto;
-import com.algaworks.algafood.domain.model.exception.EntidadeNaoEncontradaException;
-import com.algaworks.algafood.domain.model.service.CatalogoFotoProdutoService;
-import com.algaworks.algafood.domain.model.service.FotoStorageService;
-import com.algaworks.algafood.domain.model.service.ProdutoService;
+import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
+import com.algaworks.algafood.domain.service.CatalogoFotoProdutoService;
+import com.algaworks.algafood.domain.service.FotoStorageService;
+import com.algaworks.algafood.domain.service.ProdutoService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
@@ -21,9 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.nio.file.Path;
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/restaurantes/{restauranteId}/produtos/{produtoId}/foto")

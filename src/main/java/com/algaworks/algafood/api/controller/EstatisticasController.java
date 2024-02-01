@@ -1,9 +1,9 @@
 package com.algaworks.algafood.api.controller;
 
 import com.algaworks.algafood.api.dto.VendaDiaria;
-import com.algaworks.algafood.domain.model.filter.VendaDiariaFilter;
-import com.algaworks.algafood.domain.model.service.VendaQueryService;
-import com.algaworks.algafood.domain.model.service.VendaReportService;
+import com.algaworks.algafood.domain.filter.VendaDiariaFilter;
+import com.algaworks.algafood.domain.service.VendaQueryService;
+import com.algaworks.algafood.domain.service.VendaReportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;

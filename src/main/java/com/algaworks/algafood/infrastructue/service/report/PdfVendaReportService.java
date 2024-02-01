@@ -1,8 +1,8 @@
 package com.algaworks.algafood.infrastructue.service.report;
 
-import com.algaworks.algafood.domain.model.filter.VendaDiariaFilter;
-import com.algaworks.algafood.domain.model.service.VendaQueryService;
-import com.algaworks.algafood.domain.model.service.VendaReportService;
+import com.algaworks.algafood.domain.filter.VendaDiariaFilter;
+import com.algaworks.algafood.domain.service.VendaQueryService;
+import com.algaworks.algafood.domain.service.VendaReportService;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;

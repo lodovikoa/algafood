@@ -1,7 +1,7 @@
 package com.algaworks.algafood.infrastructue.repository;
 
 import com.algaworks.algafood.domain.model.FotoProduto;
-import com.algaworks.algafood.domain.model.repository.ProdutoRepositoryQueries;
+import com.algaworks.algafood.domain.repository.ProdutoRepositoryQueries;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.stereotype.Repository;

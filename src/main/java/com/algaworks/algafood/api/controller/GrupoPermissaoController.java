@@ -2,8 +2,7 @@ package com.algaworks.algafood.api.controller;
 
 import com.algaworks.algafood.api.assembler.PermissaoModelDTOAssembler;
 import com.algaworks.algafood.api.dto.model.PermissaoModelDTO;
-import com.algaworks.algafood.domain.model.Permissao;
-import com.algaworks.algafood.domain.model.service.GrupoService;
+import com.algaworks.algafood.domain.service.GrupoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;

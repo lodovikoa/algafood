@@ -1,16 +1,14 @@
 package com.algaworks.algafood.infrastructue.service.email;
 
 import com.algaworks.algafood.core.email.EmailProperties;
-import com.algaworks.algafood.domain.model.service.EnvioEmailService;
+import com.algaworks.algafood.domain.service.EnvioEmailService;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
-import org.aspectj.bridge.IMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.stereotype.Service;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 
 public class SmtpEnvioEmailService implements EnvioEmailService {

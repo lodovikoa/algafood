@@ -6,7 +6,7 @@ import com.algaworks.algafood.api.dto.input.UsuarioComSenhaInputDTO;
 import com.algaworks.algafood.api.dto.input.UsuarioInputDTO;
 import com.algaworks.algafood.api.dto.input.UsuarioSenhaInputDTO;
 import com.algaworks.algafood.api.dto.model.UsuarioModelDTO;
-import com.algaworks.algafood.domain.model.service.UsuarioService;
+import com.algaworks.algafood.domain.service.UsuarioService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

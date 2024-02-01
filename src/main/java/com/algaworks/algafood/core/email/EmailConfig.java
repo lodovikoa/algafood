@@ -1,6 +1,6 @@
 package com.algaworks.algafood.core.email;
 
-import com.algaworks.algafood.domain.model.service.EnvioEmailService;
+import com.algaworks.algafood.domain.service.EnvioEmailService;
 import com.algaworks.algafood.infrastructue.service.email.FakeEnvioEmailService;
 import com.algaworks.algafood.infrastructue.service.email.SandboxEnvioEmailService;
 import com.algaworks.algafood.infrastructue.service.email.SmtpEnvioEmailService;

@@ -1,7 +1,7 @@
 package com.algaworks.algafood;
 
 import com.algaworks.algafood.domain.model.Cozinha;
-import com.algaworks.algafood.domain.model.repository.CozinhaRepository;
+import com.algaworks.algafood.domain.repository.CozinhaRepository;
 import com.algaworks.algafood.util.DatabaseCleaner;
 import com.algaworks.algafood.util.ResourceUtils;
 import io.restassured.RestAssured;

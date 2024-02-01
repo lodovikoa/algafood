@@ -2,7 +2,7 @@ package com.algaworks.algafood.api.controller;
 
 import com.algaworks.algafood.api.assembler.GrupoModelDTOAssembler;
 import com.algaworks.algafood.api.dto.model.GrupoModelDTO;
-import com.algaworks.algafood.domain.model.service.UsuarioService;
+import com.algaworks.algafood.domain.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;

@@ -1,10 +1,13 @@
 package com.algaworks.algafood.domain.model;
 
-import com.algaworks.algafood.domain.model.exception.NegocioException;
+import com.algaworks.algafood.domain.event.PedidoCanceladoEvent;
+import com.algaworks.algafood.domain.event.PedidoConfirmadoEvent;
+import com.algaworks.algafood.domain.exception.NegocioException;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.data.domain.AbstractAggregateRoot;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
@@ -13,10 +16,10 @@ import java.util.List;
 import java.util.UUID;
 
 @Data
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @Entity
 @Table(name = "tb_pedido")
-public class Pedido {
+public class Pedido extends AbstractAggregateRoot<Pedido> {
 
     @EqualsAndHashCode.Include
     @Id
@@ -66,6 +69,8 @@ public class Pedido {
     public void confirmar() {
         this.setStatus( StatusPedido.CONFIRMADO);
         this.dataConfirmacao = OffsetDateTime.now();
+
+        this.registerEvent(new PedidoConfirmadoEvent(this));
     }
 
     public void entregar() {
@@ -76,6 +81,8 @@ public class Pedido {
     public void cancelar() {
         this.setStatus(StatusPedido.CANCELADO);
         this.dataCancelamento = OffsetDateTime.now();
+
+        registerEvent(new PedidoCanceladoEvent(this));
     }
 
     private void setStatus(StatusPedido novoStatus) {

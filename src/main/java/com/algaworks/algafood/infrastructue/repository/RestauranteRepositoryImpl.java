@@ -1,15 +1,11 @@
 package com.algaworks.algafood.infrastructue.repository;
 
 import com.algaworks.algafood.domain.model.Restaurante;
-import com.algaworks.algafood.domain.model.repository.RestauranteRepository;
-import com.algaworks.algafood.domain.model.repository.RestauranteRepositoryQueries;
+import com.algaworks.algafood.domain.repository.RestauranteRepository;
+import com.algaworks.algafood.domain.repository.RestauranteRepositoryQueries;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.TypedQuery;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Repository;
@@ -17,9 +13,7 @@ import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 
 import static com.algaworks.algafood.infrastructue.repository.spec.RestauranteSpecs.comNomeSemelhante;
 import static com.algaworks.algafood.infrastructue.repository.spec.RestauranteSpecs.conFreteGratis;
