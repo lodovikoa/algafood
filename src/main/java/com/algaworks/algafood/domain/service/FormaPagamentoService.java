@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 
 @Service
@@ -33,6 +34,14 @@ public class FormaPagamentoService {
         }catch (DataIntegrityViolationException e) {
             throw new EntidadeEmUsoException(String.format(MSG_FORMA_PAGAMENTO_EM_USO, formaPagamentoId));
         }
+    }
+
+    public OffsetDateTime getDataUltimaAtualizacao() {
+        return formaPagamentoRepository.getDataUltimaAtualizacao();
+    }
+
+    public OffsetDateTime getDataUltimaAtualizacaoId(Long formaPagamentoId) {
+        return formaPagamentoRepository.getDataAtualizacaoById(formaPagamentoId);
     }
 
     public FormaPagamento buscarOuFalhar(Long formaPagamentoId) {
