@@ -4,6 +4,7 @@ import com.algaworks.algafood.api.assembler.CozinhaInputDTODisassembler;
 import com.algaworks.algafood.api.assembler.CozinhaModelDTOAssembler;
 import com.algaworks.algafood.api.dto.input.CozinhaInputDTO;
 import com.algaworks.algafood.api.dto.model.CozinhaModelDTO;
+import com.algaworks.algafood.api.openapi.controller.CozinhaControllerOpenApi;
 import com.algaworks.algafood.domain.repository.CozinhaRepository;
 import com.algaworks.algafood.domain.service.CozinhaService;
 import jakarta.validation.Valid;
@@ -19,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(value = "/cozinhas", produces = MediaType.APPLICATION_JSON_VALUE)
-public class CozinhaController {
+public class CozinhaController implements CozinhaControllerOpenApi {
 
     @Autowired
     private CozinhaRepository cozinhaRepository;

@@ -4,9 +4,13 @@ import com.algaworks.algafood.api.assembler.CidadeInputDTODisassembler;
 import com.algaworks.algafood.api.assembler.CidadeModelDTOAssembler;
 import com.algaworks.algafood.api.dto.input.CidadeInputDTO;
 import com.algaworks.algafood.api.dto.model.CidadeModelDTO;
+import com.algaworks.algafood.api.openapi.controller.CidadeControllerOpenApi;
+import com.algaworks.algafood.api.utility.ResorceUriHelper;
 import com.algaworks.algafood.domain.exception.EstadoNaoEncontradoException;
 import com.algaworks.algafood.domain.exception.NegocioException;
 import com.algaworks.algafood.domain.service.CidadeService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,9 +19,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+
 @RestController
 @RequestMapping(value = "/cidades")
-public class CidadeController {
+public class CidadeController implements CidadeControllerOpenApi {
 
     @Autowired
     private CidadeService cidadeService;
@@ -27,6 +32,7 @@ public class CidadeController {
 
     @Autowired
     private CidadeInputDTODisassembler cidadeInputDTODisassembler;
+
 
     @GetMapping
     public List<CidadeModelDTO> listar() {
@@ -48,7 +54,10 @@ public class CidadeController {
             var cidade = cidadeInputDTODisassembler.toDomainObject(cidadeInputDTO);
             cidade = cidadeService.salvar(cidade);
 
-            return cidadeModelDTOAssembler.toModel(cidade);
+            var cidadeModelDTO = cidadeModelDTOAssembler.toModel(cidade);
+            ResorceUriHelper.addUriInResponseHeader(cidadeModelDTO.getId());
+
+            return cidadeModelDTO;
         } catch (EstadoNaoEncontradoException e) {
             throw  new NegocioException(e.getMessage(), e);
         }

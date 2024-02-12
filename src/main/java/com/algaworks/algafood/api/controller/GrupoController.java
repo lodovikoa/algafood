@@ -4,6 +4,7 @@ import com.algaworks.algafood.api.assembler.GrupoInputDTODisassembler;
 import com.algaworks.algafood.api.assembler.GrupoModelDTOAssembler;
 import com.algaworks.algafood.api.dto.input.GrupoInputDTO;
 import com.algaworks.algafood.api.dto.model.GrupoModelDTO;
+import com.algaworks.algafood.api.openapi.controller.GrupoControllerOpenApi;
 import com.algaworks.algafood.domain.service.GrupoService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/grupos")
-public class GrupoController {
+public class GrupoController implements GrupoControllerOpenApi {
 
     @Autowired
     private GrupoService grupoService;
