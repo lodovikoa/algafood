@@ -4,6 +4,7 @@ import com.algaworks.algafood.api.dto.input.CidadeInputDTO;
 import com.algaworks.algafood.api.dto.model.CidadeModelDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.hateoas.CollectionModel;
 
 import java.util.List;
 
@@ -11,7 +12,7 @@ import java.util.List;
 public interface CidadeControllerOpenApi {
 
     @Operation(summary = "Listar as cidades")
-    List<CidadeModelDTO> listar();
+    CollectionModel<CidadeModelDTO> listar();
 
     @Operation(summary = "Buscar uma cidade por ID")
     CidadeModelDTO buscar(Long cidadeId);

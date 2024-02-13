@@ -9,10 +9,12 @@ import com.algaworks.algafood.api.utility.ResorceUriHelper;
 import com.algaworks.algafood.domain.exception.EstadoNaoEncontradoException;
 import com.algaworks.algafood.domain.exception.NegocioException;
 import com.algaworks.algafood.domain.service.CidadeService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.IanaLinkRelations;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -35,15 +37,35 @@ public class CidadeController implements CidadeControllerOpenApi {
 
 
     @GetMapping
-    public List<CidadeModelDTO> listar() {
+    public CollectionModel<CidadeModelDTO> listar() {
         var todasCidades = cidadeService.listar();
-        return cidadeModelDTOAssembler.toCollectionModel(todasCidades);
+        var cidadesModelDTO = cidadeModelDTOAssembler.toCollectionModel(todasCidades);
+
+        cidadesModelDTO.forEach(cidadeModelDTO -> {
+            cidadeModelDTO.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(CidadeController.class).buscar(cidadeModelDTO.getId())).withSelfRel());
+            cidadeModelDTO.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(CidadeController.class).listar()).withRel("cidades"));
+
+            cidadeModelDTO.getEstado().add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(EstadoController.class).buscar(cidadeModelDTO.getEstado().getId())).withSelfRel());
+        });
+
+
+        CollectionModel<CidadeModelDTO> cidadesCollectionModelDTOS = CollectionModel.of(cidadesModelDTO);
+        cidadesCollectionModelDTOS.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(CidadeController.class).listar()).withSelfRel());
+
+        return cidadesCollectionModelDTOS;
     }
 
     @GetMapping("{cidadeId}")
     public CidadeModelDTO buscar(@PathVariable Long cidadeId) {
         var cidade = cidadeService.buscarOuFalhar(cidadeId);
-        return cidadeModelDTOAssembler.toModel(cidade);
+        var cidadeModelDTO = cidadeModelDTOAssembler.toModel(cidade);
+
+        cidadeModelDTO.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(CidadeController.class).buscar(cidadeModelDTO.getId())).withSelfRel());
+        cidadeModelDTO.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(CidadeController.class).listar()).withRel("cidades"));
+
+        cidadeModelDTO.getEstado().add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(EstadoController.class).buscar(cidadeModelDTO.getEstado().getId())).withSelfRel());
+
+        return cidadeModelDTO;
     }
 
     @Transactional
