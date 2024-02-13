@@ -39,33 +39,13 @@ public class CidadeController implements CidadeControllerOpenApi {
     @GetMapping
     public CollectionModel<CidadeModelDTO> listar() {
         var todasCidades = cidadeService.listar();
-        var cidadesModelDTO = cidadeModelDTOAssembler.toCollectionModel(todasCidades);
-
-        cidadesModelDTO.forEach(cidadeModelDTO -> {
-            cidadeModelDTO.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(CidadeController.class).buscar(cidadeModelDTO.getId())).withSelfRel());
-            cidadeModelDTO.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(CidadeController.class).listar()).withRel("cidades"));
-
-            cidadeModelDTO.getEstado().add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(EstadoController.class).buscar(cidadeModelDTO.getEstado().getId())).withSelfRel());
-        });
-
-
-        CollectionModel<CidadeModelDTO> cidadesCollectionModelDTOS = CollectionModel.of(cidadesModelDTO);
-        cidadesCollectionModelDTOS.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(CidadeController.class).listar()).withSelfRel());
-
-        return cidadesCollectionModelDTOS;
+        return cidadeModelDTOAssembler.toCollectionModel(todasCidades);
     }
 
     @GetMapping("{cidadeId}")
     public CidadeModelDTO buscar(@PathVariable Long cidadeId) {
         var cidade = cidadeService.buscarOuFalhar(cidadeId);
-        var cidadeModelDTO = cidadeModelDTOAssembler.toModel(cidade);
-
-        cidadeModelDTO.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(CidadeController.class).buscar(cidadeModelDTO.getId())).withSelfRel());
-        cidadeModelDTO.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(CidadeController.class).listar()).withRel("cidades"));
-
-        cidadeModelDTO.getEstado().add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(EstadoController.class).buscar(cidadeModelDTO.getEstado().getId())).withSelfRel());
-
-        return cidadeModelDTO;
+        return cidadeModelDTOAssembler.toModel(cidade);
     }
 
     @Transactional
