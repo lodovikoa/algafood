@@ -4,10 +4,13 @@ import com.algaworks.algafood.domain.model.view.RestauranteView;
 import com.fasterxml.jackson.annotation.JsonView;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.hateoas.RepresentationModel;
+import org.springframework.hateoas.server.core.Relation;
 
 @Getter
 @Setter
-public class CozinhaModelDTO {
+@Relation(collectionRelation = "cozinhas")
+public class CozinhaModelDTO extends RepresentationModel<CozinhaModelDTO> {
         @JsonView(RestauranteView.Resumo.class)
         Long id;
 

@@ -2,7 +2,6 @@ package com.algaworks.algafood.api.openapi.controller;
 
 import com.algaworks.algafood.api.dto.input.CozinhaInputDTO;
 import com.algaworks.algafood.api.dto.model.CozinhaModelDTO;
-import com.algaworks.algafood.api.dto.model.GrupoModelDTO;
 import com.algaworks.algafood.api.exceptionhandler.Problem;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -11,19 +10,16 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.HttpStatus;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "Cozinhas")
 public interface CozinhaControllerOpenApi {
 
     @Operation(summary = "Listar cozinhas")
-    Page<CozinhaModelDTO> listar(@PageableDefault(size = 10) Pageable pageable);
+    PagedModel<CozinhaModelDTO> listar(@PageableDefault(size = 10) Pageable pageable);
 
 
     @Operation(summary = "Buscar uma cozinha pelo ID")

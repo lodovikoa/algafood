@@ -5,14 +5,16 @@ import com.algaworks.algafood.api.assembler.CozinhaModelDTOAssembler;
 import com.algaworks.algafood.api.dto.input.CozinhaInputDTO;
 import com.algaworks.algafood.api.dto.model.CozinhaModelDTO;
 import com.algaworks.algafood.api.openapi.controller.CozinhaControllerOpenApi;
+import com.algaworks.algafood.domain.model.Cozinha;
 import com.algaworks.algafood.domain.repository.CozinhaRepository;
 import com.algaworks.algafood.domain.service.CozinhaService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,12 +35,17 @@ public class CozinhaController implements CozinhaControllerOpenApi {
     @Autowired
     private CozinhaInputDTODisassembler cozinhaInputDTODisassembler;
 
+    @Autowired
+    private PagedResourcesAssembler<Cozinha> pagedResourcesAssembler;
+
     @GetMapping
-    public Page<CozinhaModelDTO> listar(@PageableDefault(size = 10) Pageable pageable) {
-        var cozinhasPage = cozinhaRepository.findAll(pageable);
-        var cozinhasModel = cozinhaModelDTOAssembler.toCollectionModel(cozinhasPage.getContent());
-        Page<CozinhaModelDTO> cozinhasModelPage = new PageImpl<>(cozinhasModel, pageable, cozinhasPage.getTotalElements());
-        return cozinhasModelPage;
+    public PagedModel<CozinhaModelDTO> listar(@PageableDefault(size = 10) Pageable pageable) {
+        Page<Cozinha> cozinhasPage = cozinhaRepository.findAll(pageable);
+
+        PagedModel<CozinhaModelDTO> cozinhasPagedModel = pagedResourcesAssembler
+                .toModel(cozinhasPage, cozinhaModelDTOAssembler);
+
+        return cozinhasPagedModel;
     }
 
     @GetMapping("/{cozinhaId}")
