@@ -4,6 +4,8 @@ import com.algaworks.algafood.api.assembler.UsuarioModelDTOAssembler;
 import com.algaworks.algafood.api.dto.model.UsuarioModelDTO;
 import com.algaworks.algafood.domain.service.RestauranteService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -20,9 +22,12 @@ public class RestauranteUsuarioResponsavelController {
     private UsuarioModelDTOAssembler usuarioModelDTOAssembler;
 
     @GetMapping
-    public List<UsuarioModelDTO> listar(@PathVariable Long restauranteId) {
+    public CollectionModel<UsuarioModelDTO> listar(@PathVariable Long restauranteId) {
         var restaurante = restauranteService.buscarOuFalhar(restauranteId);
-        return usuarioModelDTOAssembler.toCollectionModel(restaurante.getResponsaveis());
+        return usuarioModelDTOAssembler.toCollectionModel(restaurante.getResponsaveis())
+                .removeLinks()
+                .add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(RestauranteUsuarioResponsavelController.class)
+                        .listar(restauranteId)).withSelfRel());
     }
 
     @Transactional

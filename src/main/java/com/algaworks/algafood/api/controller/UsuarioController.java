@@ -9,6 +9,7 @@ import com.algaworks.algafood.api.dto.model.UsuarioModelDTO;
 import com.algaworks.algafood.domain.service.UsuarioService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +30,7 @@ public class UsuarioController {
     private UsuarioInputDTODisassembler usuarioInputDisassembler;
 
     @GetMapping
-    public List<UsuarioModelDTO> listar() {
+    public CollectionModel<UsuarioModelDTO> listar() {
         var usuarios = usuarioService.listar();
         return usuarioModelDTOAssembler.toCollectionModel(usuarios);
     }
