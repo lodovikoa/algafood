@@ -17,20 +17,6 @@ public class RestauranteModelDTOAssembler {
 
     public RestauranteModelDTO toModelDTO(Restaurante restaurante) {
         return modelMapper.map(restaurante, RestauranteModelDTO.class);
-
-//        CozinhaModelDTO cozinhaModelDTO = new CozinhaModelDTO(
-//                restaurante.getCozinha().getId(),
-//                restaurante.getCozinha().getNome()
-//        );
-//
-//        RestauranteModelDTO restauranteModelDTO = new RestauranteModelDTO(
-//                restaurante.getId(),
-//                restaurante.getNome(),
-//                restaurante.getTaxaFrete(),
-//                cozinhaModelDTO
-//        );
-//
-//        return restauranteModelDTO;
     }
 
     public List<RestauranteModelDTO> toCollectionModel(List<Restaurante> restaurantes) {

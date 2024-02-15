@@ -7,6 +7,7 @@ import com.algaworks.algafood.api.dto.input.PedidoInputDTO;
 import com.algaworks.algafood.api.dto.model.PedidoModelDTO;
 import com.algaworks.algafood.api.dto.model.PedidoResumoModelDTO;
 import com.algaworks.algafood.core.data.PageableTranslator;
+import com.algaworks.algafood.domain.model.Pedido;
 import com.algaworks.algafood.domain.model.Usuario;
 import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
 import com.algaworks.algafood.domain.exception.NegocioException;
@@ -18,6 +19,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -37,14 +40,15 @@ public class PedidoController {
     @Autowired
     private PedidoInputDTODisassembler pedidoInputDTODisassembler;
 
-    @GetMapping
-    public Page<PedidoResumoModelDTO> pesquisar(PedidoFilter filtro, @PageableDefault(size = 10)Pageable pageable) {
-        pageable = this.traduzirPageable(pageable);
-        var pedidosPage = pedidoEmissaoService.findAll(filtro,pageable);
-        var pedidosResumoModelDTO = pedidoResumoModelDTOAssembler.toCollectionModel(pedidosPage.getContent());
-        Page<PedidoResumoModelDTO> pedidosModelPage = new PageImpl<>(pedidosResumoModelDTO, pageable, pedidosPage.getTotalElements());
+    @Autowired
+    private PagedResourcesAssembler<Pedido> pagedResourcesAssembler;
 
-        return pedidosModelPage;
+    @GetMapping
+    public PagedModel<PedidoResumoModelDTO> pesquisar(PedidoFilter filtro, @PageableDefault(size = 10)Pageable pageable) {
+        pageable = this.traduzirPageable(pageable);
+        Page<Pedido> pedidosPage = pedidoEmissaoService.findAll(filtro,pageable);
+
+        return pagedResourcesAssembler.toModel(pedidosPage, pedidoResumoModelDTOAssembler);
     }
 
     @GetMapping("/{pedidoCodigo}")
