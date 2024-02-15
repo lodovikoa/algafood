@@ -45,8 +45,12 @@ public class PedidoController {
 
     @GetMapping
     public PagedModel<PedidoResumoModelDTO> pesquisar(PedidoFilter filtro, @PageableDefault(size = 10)Pageable pageable) {
-        pageable = this.traduzirPageable(pageable);
-        Page<Pedido> pedidosPage = pedidoEmissaoService.findAll(filtro,pageable);
+        var pageableTraduzido = this.traduzirPageable(pageable);
+        Page<Pedido> pedidosPage = pedidoEmissaoService.findAll(filtro,pageableTraduzido);
+
+        pedidosPage = new PageImpl<>(pedidosPage.getContent(), pageable, pedidosPage.getTotalElements());
+
+       // pedidosPage = new PageWrapper<>(pedidosPage, pageable);
 
         return pagedResourcesAssembler.toModel(pedidosPage, pedidoResumoModelDTOAssembler);
     }
@@ -79,9 +83,14 @@ public class PedidoController {
     private Pageable traduzirPageable(Pageable apiPageable) {
         var mapeamento = Map.of(
                 "codigo", "codigo",
-                "restaurante.nome", "restaurante.nome",
-                "clienteNome", "cliente.nome",
-                "valorTotal", "valorTotal"
+                "subtotal", "subtotal",
+                "taxaFrete", "taxaFrete",
+                "valorTotal", "valorTotal",
+                "dataCriacao", "dataCriacao",
+                "nomerestaurante", "restaurante.nome",
+                "restaurante.id", "restaurante.id",
+                "cliente.id", "cliente.id",
+                "cliente.nome", "cliente.nome"
         );
 
         return PageableTranslator.translate(apiPageable, mapeamento);
