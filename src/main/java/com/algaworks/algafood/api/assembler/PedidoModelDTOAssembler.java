@@ -9,13 +9,9 @@ import org.springframework.hateoas.Link;
 import org.springframework.hateoas.TemplateVariable;
 import org.springframework.hateoas.TemplateVariables;
 import org.springframework.hateoas.UriTemplate;
-import org.springframework.hateoas.server.mvc.MvcLink;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 public class PedidoModelDTOAssembler extends RepresentationModelAssemblerSupport<Pedido, PedidoModelDTO> {
@@ -38,9 +34,16 @@ public class PedidoModelDTOAssembler extends RepresentationModelAssemblerSupport
                 new TemplateVariable("sort", TemplateVariable.VariableType.REQUEST_PARAM)
         );
 
+        var filtrosVariables = new TemplateVariables(
+                new TemplateVariable("clientId", TemplateVariable.VariableType.REQUEST_PARAM),
+                new TemplateVariable("restauranteId", TemplateVariable.VariableType.REQUEST_PARAM),
+                new TemplateVariable("dataCriacaoInicio", TemplateVariable.VariableType.REQUEST_PARAM),
+                new TemplateVariable("dataCriacaoFim", TemplateVariable.VariableType.REQUEST_PARAM)
+        );
+
         var pedidosUrl = WebMvcLinkBuilder.linkTo(PedidoController.class).toUri().toString();
 
-        pedidoModelDTO.add(Link.of(UriTemplate.of(pedidosUrl, pageVariables), "pedidos"));
+        pedidoModelDTO.add(Link.of(UriTemplate.of(pedidosUrl, pageVariables.concat(filtrosVariables)), "pedidos"));
 
         // pedidoModelDTO.add(WebMvcLinkBuilder.linkTo(PedidoController.class).withRel("pedidos"));
 
