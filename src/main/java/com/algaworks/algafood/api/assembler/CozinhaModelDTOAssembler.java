@@ -2,6 +2,7 @@ package com.algaworks.algafood.api.assembler;
 
 import com.algaworks.algafood.api.controller.CozinhaController;
 import com.algaworks.algafood.api.dto.model.CozinhaModelDTO;
+import com.algaworks.algafood.api.utility.AlgaLinks;
 import com.algaworks.algafood.domain.model.Cozinha;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,9 @@ public class CozinhaModelDTOAssembler extends RepresentationModelAssemblerSuppor
     @Autowired
     private ModelMapper modelMapper;
 
+    @Autowired
+    private AlgaLinks algaLinks;
+
     public CozinhaModelDTOAssembler() {
         super(CozinhaController.class, CozinhaModelDTO.class);
     }
@@ -27,14 +31,9 @@ public class CozinhaModelDTOAssembler extends RepresentationModelAssemblerSuppor
         var cozinhaModelDTO = createModelWithId(cozinha.getId(), cozinha);
         modelMapper.map(cozinha, cozinhaModelDTO);
 
-        cozinhaModelDTO.add(WebMvcLinkBuilder.linkTo(CozinhaController.class).withRel("cozinhas"));
+        cozinhaModelDTO.add(algaLinks.linkToCozinha("cozinhas"));
 
         return cozinhaModelDTO;
     }
 
-//    public List<CozinhaModelDTO> toCollectionModel(List<Cozinha> cozinhas) {
-//        return cozinhas.stream()
-//                .map(cozinha -> toModel(cozinha))
-//                .collect(Collectors.toList());
-//    }
 }

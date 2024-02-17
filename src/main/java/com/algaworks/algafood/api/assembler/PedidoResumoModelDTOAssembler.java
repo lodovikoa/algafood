@@ -6,6 +6,7 @@ import com.algaworks.algafood.api.controller.UsuarioController;
 import com.algaworks.algafood.api.controller.UsuarioGrupoController;
 import com.algaworks.algafood.api.dto.model.PedidoModelDTO;
 import com.algaworks.algafood.api.dto.model.PedidoResumoModelDTO;
+import com.algaworks.algafood.api.utility.AlgaLinks;
 import com.algaworks.algafood.domain.model.Pedido;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,9 @@ public class PedidoResumoModelDTOAssembler extends RepresentationModelAssemblerS
     @Autowired
     private ModelMapper modelMapper;
 
+    @Autowired
+    private AlgaLinks algaLinks;
+
     public PedidoResumoModelDTOAssembler() {
         super(PedidoController.class, PedidoResumoModelDTO.class);
     }
@@ -31,14 +35,10 @@ public class PedidoResumoModelDTOAssembler extends RepresentationModelAssemblerS
         var pedidoResumoModelDTO = createModelWithId(pedido.getCodigo(), pedido);
         modelMapper.map(pedido, pedidoResumoModelDTO);
 
-        pedidoResumoModelDTO.add(WebMvcLinkBuilder.linkTo(PedidoController.class).withRel("pedidos"));
-        pedidoResumoModelDTO.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(RestauranteController.class).buscar(pedido.getRestaurante().getId())).withSelfRel());
-        pedidoResumoModelDTO.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UsuarioController.class).buscarPorId(pedido.getCliente().getId())).withSelfRel());
+        pedidoResumoModelDTO.add(algaLinks.linkToPedidos("pedidos"));
+        pedidoResumoModelDTO.add(algaLinks.linkToRestaurante(pedido.getRestaurante().getId()));
+        pedidoResumoModelDTO.add(algaLinks.linkToUsuario(pedido.getCliente().getId()));
 
         return pedidoResumoModelDTO;
     }
-
-//    public List<PedidoResumoModelDTO> toCollectionModel(List<Pedido> pedidos) {
-//        return pedidos.stream().map(pedido -> toModel(pedido)).collect(Collectors.toList());
-//    }
 }

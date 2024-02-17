@@ -3,6 +3,7 @@ package com.algaworks.algafood.api.assembler;
 import com.algaworks.algafood.api.controller.CidadeController;
 import com.algaworks.algafood.api.controller.EstadoController;
 import com.algaworks.algafood.api.dto.model.CidadeModelDTO;
+import com.algaworks.algafood.api.utility.AlgaLinks;
 import com.algaworks.algafood.domain.model.Cidade;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,9 @@ public class CidadeModelDTOAssembler extends RepresentationModelAssemblerSupport
     @Autowired
     private ModelMapper modelMapper;
 
+    @Autowired
+    private AlgaLinks algaLinks;
+
     public CidadeModelDTOAssembler() {
         super(CidadeController.class, CidadeModelDTO.class);
     }
@@ -29,14 +33,15 @@ public class CidadeModelDTOAssembler extends RepresentationModelAssemblerSupport
     public CidadeModelDTO toModel(Cidade cidade) {
         var cidadeModelDTO = createModelWithId(cidade.getId(), cidade);
         modelMapper.map(cidade, cidadeModelDTO);
-        cidadeModelDTO.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(CidadeController.class).listar()).withRel("cidades"));
-        cidadeModelDTO.getEstado().add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(EstadoController.class).buscar(cidadeModelDTO.getEstado().getId())).withSelfRel());
+
+        cidadeModelDTO.add(algaLinks.linkToCidade("cidades"));
+        cidadeModelDTO.getEstado().add(algaLinks.linkToEstado(cidadeModelDTO.getEstado().getId()));
 
         return cidadeModelDTO;
     }
 
     @Override
     public CollectionModel<CidadeModelDTO> toCollectionModel(Iterable<? extends Cidade> entities) {
-        return super.toCollectionModel(entities).add(WebMvcLinkBuilder.linkTo(CidadeController.class).withSelfRel());
+        return super.toCollectionModel(entities).add(algaLinks.linkToCidade());
     }
 }

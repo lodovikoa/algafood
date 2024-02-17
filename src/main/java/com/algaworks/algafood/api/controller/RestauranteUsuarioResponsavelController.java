@@ -2,6 +2,7 @@ package com.algaworks.algafood.api.controller;
 
 import com.algaworks.algafood.api.assembler.UsuarioModelDTOAssembler;
 import com.algaworks.algafood.api.dto.model.UsuarioModelDTO;
+import com.algaworks.algafood.api.utility.AlgaLinks;
 import com.algaworks.algafood.domain.service.RestauranteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
@@ -21,13 +22,15 @@ public class RestauranteUsuarioResponsavelController {
     @Autowired
     private UsuarioModelDTOAssembler usuarioModelDTOAssembler;
 
+    @Autowired
+    private AlgaLinks algaLinks;
+
     @GetMapping
     public CollectionModel<UsuarioModelDTO> listar(@PathVariable Long restauranteId) {
         var restaurante = restauranteService.buscarOuFalhar(restauranteId);
         return usuarioModelDTOAssembler.toCollectionModel(restaurante.getResponsaveis())
                 .removeLinks()
-                .add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(RestauranteUsuarioResponsavelController.class)
-                        .listar(restauranteId)).withSelfRel());
+                .add(algaLinks.linkToResponsaveisRestaurante(restauranteId));
     }
 
     @Transactional

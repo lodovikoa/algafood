@@ -3,6 +3,7 @@ package com.algaworks.algafood.api.assembler;
 import com.algaworks.algafood.api.controller.UsuarioController;
 import com.algaworks.algafood.api.controller.UsuarioGrupoController;
 import com.algaworks.algafood.api.dto.model.UsuarioModelDTO;
+import com.algaworks.algafood.api.utility.AlgaLinks;
 import com.algaworks.algafood.domain.model.Usuario;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,9 @@ public class UsuarioModelDTOAssembler extends RepresentationModelAssemblerSuppor
     @Autowired
     private ModelMapper modelMapper;
 
+    @Autowired
+    private AlgaLinks algaLinks;
+
     public UsuarioModelDTOAssembler() {
         super(UsuarioController.class, UsuarioModelDTO.class);
     }
@@ -30,8 +34,8 @@ public class UsuarioModelDTOAssembler extends RepresentationModelAssemblerSuppor
         var usuarioModelDTO = createModelWithId(usuario.getId(), usuario);
         modelMapper.map(usuario, usuarioModelDTO);
 
-        usuarioModelDTO.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UsuarioController.class).listar()).withRel("usuarios"));
-        usuarioModelDTO.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UsuarioGrupoController.class).listar(usuario.getId())).withRel("grupos-usuarios"));
+        usuarioModelDTO.add(algaLinks.linktoUsuario("usuarios"));
+        usuarioModelDTO.add(algaLinks.linkToGrupoUsuarios(usuario.getId(), "grupos-usuarios"));
 
         return usuarioModelDTO;
     }

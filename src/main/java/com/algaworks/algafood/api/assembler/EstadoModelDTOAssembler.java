@@ -2,6 +2,7 @@ package com.algaworks.algafood.api.assembler;
 
 import com.algaworks.algafood.api.controller.EstadoController;
 import com.algaworks.algafood.api.dto.model.EstadoModelDTO;
+import com.algaworks.algafood.api.utility.AlgaLinks;
 import com.algaworks.algafood.domain.model.Estado;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,9 @@ public class EstadoModelDTOAssembler extends RepresentationModelAssemblerSupport
     @Autowired
     private ModelMapper modelMapper;
 
+    @Autowired
+    private AlgaLinks algaLinks;
+
     public EstadoModelDTOAssembler() {
         super(EstadoController.class, EstadoModelDTO.class);
     }
@@ -27,18 +31,13 @@ public class EstadoModelDTOAssembler extends RepresentationModelAssemblerSupport
         var estadoModelDTO = createModelWithId(estado.getId(), estado);
         modelMapper.map(estado, estadoModelDTO);
 
-        estadoModelDTO.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(EstadoController.class).listar()).withRel("estados"));
+        estadoModelDTO.add(algaLinks.linkToEstado("estados"));
         return estadoModelDTO;
     }
 
     @Override
     public CollectionModel<EstadoModelDTO> toCollectionModel(Iterable<? extends Estado> entities) {
-        return super.toCollectionModel(entities).add(WebMvcLinkBuilder.linkTo(EstadoController.class).withSelfRel());
+        return super.toCollectionModel(entities).add(algaLinks.linktoEstado());
     }
 
-//    public List<EstadoModelDTO> toCollectionModel(List<Estado> estados) {
-//        return estados.stream()
-//                .map(estado -> toModel(estado))
-//                .collect(Collectors.toList());
-//    }
 }
