@@ -2,25 +2,23 @@ package com.algaworks.algafood.api.controller;
 
 import com.algaworks.algafood.api.assembler.FormaPagamentoInputDTODisassembler;
 import com.algaworks.algafood.api.assembler.FormaPagamentoModelDTOAssembler;
-import com.algaworks.algafood.api.dto.input.FormaPagamentoInputDTO;;
+import com.algaworks.algafood.api.dto.input.FormaPagamentoInputDTO;
 import com.algaworks.algafood.api.dto.model.FormaPagamentoModelDTO;
-import com.algaworks.algafood.domain.model.FormaPagamento;
 import com.algaworks.algafood.domain.service.FormaPagamentoService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.filter.ShallowEtagHeaderFilter;
 
-import java.time.OffsetDateTime;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
+
+;
 
 @RestController
 @RequestMapping("/formas-pagamento")
