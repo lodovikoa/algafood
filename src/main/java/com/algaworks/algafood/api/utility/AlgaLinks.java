@@ -77,6 +77,14 @@ public class AlgaLinks {
         return WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(RestauranteUsuarioResponsavelController.class).listar(restauranteId)).withRel(rel);
     }
 
+    public Link linkToRestauranteResponsavelDesassociacao(Long restauranteId, Long usuarioId, String rel) {
+        return WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(RestauranteUsuarioResponsavelController.class).removerResponsavel(restauranteId, usuarioId)).withRel(rel);
+    }
+
+    public Link linkToRestauranteResponsavelAssociacao(Long restauranteId, String rel) {
+        return WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(RestauranteUsuarioResponsavelController.class).adicionarResponsavel(restauranteId, null)).withRel(rel);
+    }
+
     public Link linkToRestauranteAtivacao(Long restauranteId, String rel) {
         return WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(RestauranteController.class).ativar(restauranteId)).withRel(rel);
     }
@@ -125,6 +133,10 @@ public class AlgaLinks {
 
     public Link linkToRestauranteFormasPagamentoDesassociacao(Long restauranteId, Long formaPagamentoId, String rel) {
         return WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(RestauranteFormasPagamentoController.class).desassociarFormaPagamento(restauranteId, formaPagamentoId)).withRel(rel);
+    }
+
+    public Link linkToRestauranteFormasPagamentoAssociar(Long restauranteId, String rel) {
+        return WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(RestauranteFormasPagamentoController.class).associarFormaPagamento(restauranteId, null)).withRel(rel);
     }
 
     public Link linkToFormasPagamento(String rel) {
