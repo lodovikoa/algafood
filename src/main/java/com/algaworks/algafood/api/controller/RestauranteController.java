@@ -1,20 +1,25 @@
 package com.algaworks.algafood.api.controller;
 
+import com.algaworks.algafood.api.assembler.RestauranteApenasNomeModelDTOAssembler;
+import com.algaworks.algafood.api.assembler.RestauranteBasicoModelDTOAssembler;
 import com.algaworks.algafood.api.assembler.RestauranteInputDTODisassembler;
 import com.algaworks.algafood.api.assembler.RestauranteModelDTOAssembler;
 import com.algaworks.algafood.api.dto.input.RestauranteInputDTO;
+import com.algaworks.algafood.api.dto.model.RestauranteApenasNomeModelDTO;
+import com.algaworks.algafood.api.dto.model.RestauranteBasicoModelDTO;
 import com.algaworks.algafood.api.dto.model.RestauranteModelDTO;
 import com.algaworks.algafood.domain.model.Restaurante;
 import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
 import com.algaworks.algafood.domain.exception.NegocioException;
 import com.algaworks.algafood.domain.service.RestauranteService;
-import com.algaworks.algafood.domain.model.view.RestauranteView;
 import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,38 +39,28 @@ public class RestauranteController {
     @Autowired
     private RestauranteInputDTODisassembler restauranteInputDtoDisassembler;
 
-    @JsonView(RestauranteView.Resumo.class)
+    @Autowired
+    private RestauranteBasicoModelDTOAssembler restauranteBasicoModelDTOAssembler;
+
+    @Autowired
+    RestauranteApenasNomeModelDTOAssembler restauranteApenasNomeModelDTOAssembler;
+
+    // @JsonView(RestauranteView.Resumo.class)
     @GetMapping
-    public List<RestauranteModelDTO> listar() {
-        return restauranteModelDtoAssembler.toCollectionModel(restauranteService.findAll());
+    public CollectionModel<RestauranteBasicoModelDTO> listar() {
+        return restauranteBasicoModelDTOAssembler.toCollectionModel(restauranteService.findAll());
     }
 
-    @JsonView(RestauranteView.ApenasNome.class)
+    // @JsonView(RestauranteView.ApenasNome.class)
     @GetMapping(params = "projecao=apenas-nome")
-    public List<RestauranteModelDTO> listarApenasNome() {
-        return restauranteModelDtoAssembler.toCollectionModel(restauranteService.findAll());
+    public CollectionModel<RestauranteApenasNomeModelDTO> listarApenasNome() {
+        return restauranteApenasNomeModelDTOAssembler.toCollectionModel(restauranteService.findAll());
     }
-
-//    @GetMapping
-//    public MappingJacksonValue listar(@RequestParam(required = false) String projecao) {
-//        var restauranteModel =restauranteModelDtoAssembler.toCollectionModel(restauranteService.findAll());
-//        MappingJacksonValue restaurantesWrapper = new MappingJacksonValue(restauranteModel);
-//
-//        restaurantesWrapper.setSerializationView(RestauranteView.Resumo.class);
-//
-//        if("apenas-nome".equals(projecao)) {
-//            restaurantesWrapper.setSerializationView(RestauranteView.ApenasNome.class);
-//        } else if ("completo".equals(projecao)) {
-//            restaurantesWrapper.setSerializationView(null);
-//        }
-//
-//        return restaurantesWrapper;
-//    }
 
     @GetMapping(value = "{restauranteId}")
     public RestauranteModelDTO buscar(@PathVariable Long restauranteId) {
 
-        return restauranteModelDtoAssembler.toModelDTO(restauranteService.buscarOuFalhar(restauranteId));
+        return restauranteModelDtoAssembler.toModel(restauranteService.buscarOuFalhar(restauranteId));
     }
 
     @Transactional
@@ -75,7 +70,7 @@ public class RestauranteController {
         try {
             Restaurante restaurante = restauranteInputDtoDisassembler.toDomainObject(restauranteImputDTO);
 
-            return restauranteModelDtoAssembler.toModelDTO(restauranteService.salvar(restaurante));
+            return restauranteModelDtoAssembler.toModel(restauranteService.salvar(restaurante));
         } catch (EntidadeNaoEncontradaException e) {
             throw new NegocioException(e.getMessage());
         }
@@ -87,7 +82,7 @@ public class RestauranteController {
         var restauranteAtual = restauranteService.buscarOuFalhar(restauranteId);
         restauranteInputDtoDisassembler.copyToDomainObject(restauranteInputDTO, restauranteAtual);
         try {
-            return restauranteModelDtoAssembler.toModelDTO(restauranteService.salvar(restauranteAtual));
+            return restauranteModelDtoAssembler.toModel(restauranteService.salvar(restauranteAtual));
         } catch (EntidadeNaoEncontradaException e) {
             throw new NegocioException(e.getMessage());
         }
@@ -97,21 +92,23 @@ public class RestauranteController {
     @Transactional
     @PatchMapping("/{restauranteId}")
     public RestauranteModelDTO atualizarParcial(@PathVariable Long restauranteId, @RequestBody Map<String, Object> campos, HttpServletRequest request) {
-        return restauranteModelDtoAssembler.toModelDTO(restauranteService.atualizarParcial(restauranteId, campos, request));
+        return restauranteModelDtoAssembler.toModel(restauranteService.atualizarParcial(restauranteId, campos, request));
     }
 
     @Transactional
     @PutMapping("/{restauranteId}/ativo")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void ativar(@PathVariable Long restauranteId) {
+    public ResponseEntity<Void> ativar(@PathVariable Long restauranteId) {
         restauranteService.ativar(restauranteId);
+        return ResponseEntity.noContent().build();
     }
 
     @Transactional
     @DeleteMapping("/{restauranteId}/ativo")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void inativar(@PathVariable Long restauranteId) {
+    public ResponseEntity<Void> inativar(@PathVariable Long restauranteId) {
         restauranteService.inativar(restauranteId);
+        return ResponseEntity.noContent().build();
     }
 
     @Transactional
@@ -131,14 +128,16 @@ public class RestauranteController {
     @Transactional
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PutMapping("/{restauranteId}/abertura")
-    public void abrirRestaurente(@PathVariable Long restauranteId) {
+    public ResponseEntity<Void> abrirRestaurente(@PathVariable Long restauranteId) {
         restauranteService.abrirRestaurante(restauranteId);
+        return ResponseEntity.noContent().build();
     }
 
     @Transactional
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PutMapping("/{restauranteId}/fechamento")
-    public void fecharRestaurente(@PathVariable Long restauranteId) {
+    public ResponseEntity<Void> fecharRestaurente(@PathVariable Long restauranteId) {
         restauranteService.fecharRestaurante(restauranteId);
+        return ResponseEntity.noContent().build();
     }
 }

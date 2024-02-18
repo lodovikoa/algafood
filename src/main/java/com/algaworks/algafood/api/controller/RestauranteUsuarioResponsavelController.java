@@ -6,12 +6,9 @@ import com.algaworks.algafood.api.utility.AlgaLinks;
 import com.algaworks.algafood.domain.service.RestauranteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
-import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping(value = "/restaurantes/{restauranteId}/responsaveis")
@@ -30,7 +27,7 @@ public class RestauranteUsuarioResponsavelController {
         var restaurante = restauranteService.buscarOuFalhar(restauranteId);
         return usuarioModelDTOAssembler.toCollectionModel(restaurante.getResponsaveis())
                 .removeLinks()
-                .add(algaLinks.linkToResponsaveisRestaurante(restauranteId));
+                .add(algaLinks.linkToRestauranteResponsaveis(restauranteId));
     }
 
     @Transactional

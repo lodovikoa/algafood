@@ -75,9 +75,43 @@ public class Restaurante implements Serializable {
     /*
     *  Métodos
     * */
+
+    public boolean isAberto() {
+        return this.aberto;
+    }
+
+    public boolean isFechado() {
+        return !this.isAberto();
+    }
+
+    public boolean isAtivo() {
+        return this.ativo;
+    }
+
+    public boolean isInativo() {
+        return !this.isAtivo();
+    }
+
     public void ativar() {
         this.setAtivo(true);
     }
+
+    public boolean aberturaPermitida() {
+        return this.isAtivo() && this.isFechado();
+    }
+
+    public boolean fechamentoPermitido() {
+        return this.isAberto();
+    }
+
+    public boolean ativacaoPermitida() {
+        return this.isInativo();
+    }
+
+    public boolean inativacaoPermitida() {
+        return isAtivo();
+    }
+
 
     public void inativar() {
         this.setAtivo(false);
