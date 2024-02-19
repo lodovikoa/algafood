@@ -4,10 +4,13 @@ import com.algaworks.algafood.api.assembler.ProdutoInputDTODisassembler;
 import com.algaworks.algafood.api.assembler.ProdutoModelDTOAssembler;
 import com.algaworks.algafood.api.dto.input.ProdutoInputDTO;
 import com.algaworks.algafood.api.dto.model.ProdutoModelDTO;
+import com.algaworks.algafood.api.utility.AlgaLinks;
+import com.algaworks.algafood.domain.model.Produto;
 import com.algaworks.algafood.domain.service.ProdutoService;
 import com.algaworks.algafood.domain.service.RestauranteService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -27,10 +30,16 @@ public class RestauranteProdutoController {
     @Autowired
     private ProdutoInputDTODisassembler produtoInputDTODisassembler;
 
+    @Autowired
+    private AlgaLinks algaLinks;
+
     @GetMapping
-    public List<ProdutoModelDTO> listar(@PathVariable Long restauranteId, @RequestParam(required = false) boolean incluirInativos) {
+    public CollectionModel<ProdutoModelDTO> listar(@PathVariable Long restauranteId, @RequestParam(required = false) Boolean incluirInativos) {
         var restaurante = restauranteService.buscarOuFalhar(restauranteId);
-        return produtoModelDTOAssembler.toCollectionMode(produtoService.findByRestaurante(restaurante, incluirInativos));
+
+        List<Produto> todosProdutos = produtoService.findByRestaurante(restaurante, incluirInativos);
+
+        return produtoModelDTOAssembler.toCollectionModel(todosProdutos).add(algaLinks.linkToProdutos(restauranteId));
     }
 
     @GetMapping("/{produtoId}")
