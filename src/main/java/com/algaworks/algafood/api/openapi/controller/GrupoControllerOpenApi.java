@@ -9,13 +9,14 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.hateoas.CollectionModel;
 
 import java.util.List;
 
 @Tag(name = "Grupos")
 public interface GrupoControllerOpenApi {
     @Operation(summary = "Listar os grupos")
-    List<GrupoModelDTO> listar();
+    CollectionModel<GrupoModelDTO> listar();
 
 
     @Operation(summary = "Buscar por ID")

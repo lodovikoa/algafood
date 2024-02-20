@@ -7,7 +7,8 @@ import com.algaworks.algafood.api.dto.model.GrupoModelDTO;
 import com.algaworks.algafood.api.openapi.controller.GrupoControllerOpenApi;
 import com.algaworks.algafood.domain.service.GrupoService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Autowired;;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +28,7 @@ public class GrupoController implements GrupoControllerOpenApi {
     private GrupoInputDTODisassembler grupoInputDTODisassembler;
 
     @GetMapping
-    public List<GrupoModelDTO> listar() {
+    public CollectionModel<GrupoModelDTO> listar() {
         var todosGrupos = grupoService.listar();
         return grupoModelDTOAssembler.toCollectionModel(todosGrupos);
     }
@@ -35,7 +36,7 @@ public class GrupoController implements GrupoControllerOpenApi {
     @GetMapping("/{idGrupo}")
     public GrupoModelDTO buscarPorId(@PathVariable Long idGrupo) {
         var grupo = grupoService.buscarOuFalhar(idGrupo);
-        return grupoModelDTOAssembler.dtoModel(grupo);
+        return grupoModelDTOAssembler.toModel(grupo);
     }
 
     @Transactional
@@ -44,7 +45,7 @@ public class GrupoController implements GrupoControllerOpenApi {
     public GrupoModelDTO cadastrar(@Valid @RequestBody GrupoInputDTO grupoInputDTO) {
         var grupo = grupoInputDTODisassembler.toDomaninObject(grupoInputDTO);
         grupo = grupoService.salvar(grupo);
-        return grupoModelDTOAssembler.dtoModel(grupo);
+        return grupoModelDTOAssembler.toModel(grupo);
     }
 
     @Transactional
@@ -53,7 +54,7 @@ public class GrupoController implements GrupoControllerOpenApi {
         var grupoOriginal = grupoService.buscarOuFalhar(grupoId);
         grupoInputDTODisassembler.copyDomainObject(grupoInputDTO, grupoOriginal);
         var grupo = grupoService.salvar(grupoOriginal);
-        return grupoModelDTOAssembler.dtoModel(grupo);
+        return grupoModelDTOAssembler.toModel(grupo);
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)

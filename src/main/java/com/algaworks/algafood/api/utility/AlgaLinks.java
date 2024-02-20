@@ -53,7 +53,7 @@ public class AlgaLinks {
     }
 
     public Link linkToRestaurante(Long restauranteId) {
-        return  WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(RestauranteController.class).buscar(restauranteId)).withSelfRel();
+        return WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(RestauranteController.class).buscar(restauranteId)).withSelfRel();
     }
 
     public Link linkToRestaurante(String rel) {
@@ -66,7 +66,7 @@ public class AlgaLinks {
 //    }
 
     public Link linkToRestauranteFormasPagamento(Long restauranteId, String rel) {
-        return  WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(RestauranteFormasPagamentoController.class).listar(restauranteId)).withRel(rel);
+        return WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(RestauranteFormasPagamentoController.class).listar(restauranteId)).withRel(rel);
     }
 
     public Link linkToRestauranteResponsaveis(Long restauranteId) {
@@ -167,7 +167,7 @@ public class AlgaLinks {
         return WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(EstadoController.class).buscar(estadoId)).withSelfRel();
     }
 
-    public Link linkToItens(Long restauranteId, Long produdoId, String rel ) {
+    public Link linkToItens(Long restauranteId, Long produdoId, String rel) {
         return WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(RestauranteProdutoController.class).buscarProdutoPorRestaurante(restauranteId, produdoId)).withRel(rel);
     }
 
@@ -197,5 +197,46 @@ public class AlgaLinks {
 
     public Link linkToFotoProduto(Long restauranteId, Long produtoId) {
         return linkToFotoProduto(restauranteId, produtoId, IanaLinkRelations.SELF.value());
+    }
+
+    public Link linkToGrupos(String rel) {
+        return WebMvcLinkBuilder.linkTo(GrupoController.class).withRel(rel);
+    }
+
+    public Link linkToGrupos() {
+        return linkToGrupos(IanaLinkRelations.SELF.value());
+    }
+
+    public Link linkToGrupoPermissoes(Long grupoId, String rel) {
+        return WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(GrupoPermissaoController.class).listar(grupoId)).withRel(rel);
+    }
+
+    public Link linkToPermissoes(String rel) {
+        return WebMvcLinkBuilder.linkTo(PermissaoController.class).withRel(rel);
+    }
+
+    public Link linkToPermissoes() {
+        return linkToPermissoes(IanaLinkRelations.SELF.value());
+    }
+
+    public Link linkToGrupoPermissoes(Long grupoId) {
+        return linkToGrupoPermissoes(grupoId, IanaLinkRelations.SELF.value());
+    }
+
+    public Link linkToGrupoPermissaoAssociacao(Long grupoId, String rel) {
+        return WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(GrupoPermissaoController.class).associarPermissao(grupoId, null)).withRel(rel);
+    }
+
+    public Link linkToGrupoPermissaoDesassociacao(Long grupoId, Long permissaoId, String rel) {
+        return WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(GrupoPermissaoController.class).desassociarPermissao(grupoId, permissaoId)).withRel(rel);
+    }
+
+    public Link linkToUsuarioGrupoAssociacao(Long usuarioId, String rel) {
+        return WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UsuarioGrupoController.class).associarGrupo(usuarioId, null)).withRel(rel);
+                //associar(usuarioId, null)).withRel(rel);
+    }
+
+    public Link linkToUsuarioGrupoDesassociacao(Long usuarioId, Long grupoId, String rel) {
+        return WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UsuarioGrupoController.class).desassociarGrupo(usuarioId, grupoId)).withRel(rel);
     }
 }
