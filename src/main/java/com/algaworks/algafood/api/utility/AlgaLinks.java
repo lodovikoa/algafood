@@ -233,10 +233,25 @@ public class AlgaLinks {
 
     public Link linkToUsuarioGrupoAssociacao(Long usuarioId, String rel) {
         return WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UsuarioGrupoController.class).associarGrupo(usuarioId, null)).withRel(rel);
-                //associar(usuarioId, null)).withRel(rel);
     }
 
     public Link linkToUsuarioGrupoDesassociacao(Long usuarioId, Long grupoId, String rel) {
         return WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UsuarioGrupoController.class).desassociarGrupo(usuarioId, grupoId)).withRel(rel);
+    }
+
+    public Link linkToEstatisticas(String rel) {
+        return WebMvcLinkBuilder.linkTo(EstatisticasController.class).withRel(rel);
+    }
+
+    public Link linkToEstatisticasVendasDiarias(String rel) {
+        TemplateVariables filtroVariables = new TemplateVariables(
+                new TemplateVariable("restauranteId", TemplateVariable.VariableType.REQUEST_PARAM),
+                new TemplateVariable("dataCriacaoInicio", TemplateVariable.VariableType.REQUEST_PARAM),
+                new TemplateVariable("dataCriacaoFim", TemplateVariable.VariableType.REQUEST_PARAM),
+                new TemplateVariable("timeOffset", TemplateVariable.VariableType.REQUEST_PARAM));
+
+        String pedidosUrl = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(EstatisticasController.class).consultarVendasDiariasJson(null, null)).toUri().toString();
+
+        return Link.of(UriTemplate.of(pedidosUrl, filtroVariables), rel);
     }
 }
