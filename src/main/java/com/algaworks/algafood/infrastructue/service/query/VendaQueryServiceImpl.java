@@ -1,6 +1,6 @@
 package com.algaworks.algafood.infrastructue.service.query;
 
-import com.algaworks.algafood.api.dto.VendaDiaria;
+import com.algaworks.algafood.api.v1.dto.VendaDiaria;
 import com.algaworks.algafood.domain.model.Pedido;
 import com.algaworks.algafood.domain.model.StatusPedido;
 import com.algaworks.algafood.domain.filter.VendaDiariaFilter;
