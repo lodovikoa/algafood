@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(value = "/grupos/{grupoId}/permissoes")
+@RequestMapping(value = "/v1/grupos/{grupoId}/permissoes")
 public class GrupoPermissaoController {
 
     @Autowired

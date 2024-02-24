@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/pedidos/{pedidoCodigo}")
+@RequestMapping("/v1/pedidos/{pedidoCodigo}")
 public class PedidoFluxoController {
 
     @Autowired

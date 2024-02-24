@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RestController
-@RequestMapping(value = "/pedidos")
+@RequestMapping(value = "/v1/pedidos")
 public class PedidoController {
 
     @Autowired

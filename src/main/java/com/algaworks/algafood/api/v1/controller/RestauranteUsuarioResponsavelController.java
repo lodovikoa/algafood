@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(value = "/restaurantes/{restauranteId}/responsaveis")
+@RequestMapping(value = "/v1/restaurantes/{restauranteId}/responsaveis")
 public class RestauranteUsuarioResponsavelController {
 
     @Autowired
