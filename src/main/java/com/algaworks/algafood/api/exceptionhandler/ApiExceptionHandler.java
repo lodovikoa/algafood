@@ -7,6 +7,7 @@ import com.algaworks.algafood.domain.exception.NegocioException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.fasterxml.jackson.databind.exc.PropertyBindingException;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 
+@Slf4j
 @ControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler  {
 
@@ -58,7 +60,8 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler  {
         var problemType = ProblemType.ERRO_DE_SISTEMA;
         var detail = MSG_ERRO_GENERICA_USUARIO_FINAL;
 
-        ex.printStackTrace();
+        // ex.printStackTrace();
+        log.error(ex.getMessage(), ex);
 
         var problem = createProblemBuilder(status, problemType, detail,MSG_ERRO_GENERICA_USUARIO_FINAL, null).build();
         return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
@@ -70,7 +73,8 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler  {
         var problemType = ProblemType.ENTIDADE_EM_USO;
         var detail = ex.getMessage();
 
-        ex.printStackTrace();
+        // ex.printStackTrace();
+        log.error(ex.getMessage(), ex);
 
         var problem = createProblemBuilder(status, problemType, detail, MSG_ERRO_GENERICA_USUARIO_FINAL, null).build();
         return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);

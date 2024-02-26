@@ -52,6 +52,8 @@ public class CozinhaController implements CozinhaControllerOpenApi {
         PagedModel<CozinhaModelDTO> cozinhasPagedModel = pagedResourcesAssembler
                 .toModel(cozinhasPage, cozinhaModelDTOAssembler);
 
+       // if(true) throw new RuntimeException("Teste de Exception......");
+
         return cozinhasPagedModel;
     }
 
