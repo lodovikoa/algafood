@@ -3,6 +3,7 @@ package com.algaworks.algafood.api.v1.controller;
 import com.algaworks.algafood.api.v1.assembler.GrupoModelDTOAssembler;
 import com.algaworks.algafood.api.v1.dto.model.GrupoModelDTO;
 import com.algaworks.algafood.api.v1.AlgaLinks;
+import com.algaworks.algafood.core.security.CheckSecurity;
 import com.algaworks.algafood.domain.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
@@ -23,6 +24,7 @@ public class UsuarioGrupoController {
     @Autowired
     private AlgaLinks algaLinks;
 
+    @CheckSecurity.UsuariosGruposPermissoes.PodeConsultar
     @GetMapping
     public CollectionModel<GrupoModelDTO> listar(@PathVariable Long usuarioId) {
         var usuario = usuarioService.buscarOuFalhar(usuarioId);
@@ -38,6 +40,7 @@ public class UsuarioGrupoController {
         return gruposModel;
     }
 
+    @CheckSecurity.UsuariosGruposPermissoes.PodeEditar
     @Transactional
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{grupoId}")
@@ -46,6 +49,7 @@ public class UsuarioGrupoController {
         return ResponseEntity.noContent().build();
     }
 
+    @CheckSecurity.UsuariosGruposPermissoes.PodeEditar
     @Transactional
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PutMapping("/{grupoId}")

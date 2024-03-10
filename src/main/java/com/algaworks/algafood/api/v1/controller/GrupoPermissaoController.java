@@ -3,6 +3,7 @@ package com.algaworks.algafood.api.v1.controller;
 import com.algaworks.algafood.api.v1.assembler.PermissaoModelDTOAssembler;
 import com.algaworks.algafood.api.v1.dto.model.PermissaoModelDTO;
 import com.algaworks.algafood.api.v1.AlgaLinks;
+import com.algaworks.algafood.core.security.CheckSecurity;
 import com.algaworks.algafood.domain.service.GrupoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
@@ -24,6 +25,7 @@ public class GrupoPermissaoController {
     @Autowired
     private PermissaoModelDTOAssembler permissaoModelDTOAssembler;
 
+    @CheckSecurity.UsuariosGruposPermissoes.PodeConsultar
     @GetMapping
     public CollectionModel<PermissaoModelDTO> listar(@PathVariable Long grupoId) {
         var grupo = grupoService.buscarOuFalhar(grupoId);
@@ -40,6 +42,7 @@ public class GrupoPermissaoController {
         return permissaoModel;
     }
 
+    @CheckSecurity.UsuariosGruposPermissoes.PodeEditar
     @Transactional
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{permissaoId}")
@@ -48,6 +51,7 @@ public class GrupoPermissaoController {
         return ResponseEntity.noContent().build();
     }
 
+    @CheckSecurity.UsuariosGruposPermissoes.PodeEditar
     @Transactional
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PutMapping("/{permissaoId}")

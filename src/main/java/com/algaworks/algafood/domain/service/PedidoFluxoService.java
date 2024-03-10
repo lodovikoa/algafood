@@ -32,4 +32,8 @@ public class PedidoFluxoService {
 
         pedidoRepository.save(pedido);
     }
+
+    public boolean isPedidoGerenciadoPor(String codigoPedido, Long usuarioId) {
+        return pedidoRepository.isPedidoGerenciadoPor(codigoPedido, usuarioId);
+    }
 }

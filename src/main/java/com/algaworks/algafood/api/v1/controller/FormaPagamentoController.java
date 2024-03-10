@@ -4,6 +4,7 @@ import com.algaworks.algafood.api.v1.assembler.FormaPagamentoInputDTODisassemble
 import com.algaworks.algafood.api.v1.assembler.FormaPagamentoModelDTOAssembler;
 import com.algaworks.algafood.api.v1.dto.input.FormaPagamentoInputDTO;
 import com.algaworks.algafood.api.v1.dto.model.FormaPagamentoModelDTO;
+import com.algaworks.algafood.core.security.CheckSecurity;
 import com.algaworks.algafood.domain.service.FormaPagamentoService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,7 @@ public class FormaPagamentoController {
     private FormaPagamentoInputDTODisassembler formaPagamentoInputDTODisassembler;
 
 
+    @CheckSecurity.FormasPagamento.PodeConsultar
     @GetMapping
     public ResponseEntity<CollectionModel<FormaPagamentoModelDTO>> listar(ServletWebRequest request) {
         ShallowEtagHeaderFilter.disableContentCaching(request.getRequest());
@@ -60,6 +62,7 @@ public class FormaPagamentoController {
     }
 
 
+    @CheckSecurity.FormasPagamento.PodeConsultar
     @GetMapping("/{formaPagamentoId}")
     public ResponseEntity<FormaPagamentoModelDTO> buscarPorId(@PathVariable Long formaPagamentoId, ServletWebRequest request) {
         ShallowEtagHeaderFilter.disableContentCaching(request.getRequest());
@@ -89,6 +92,7 @@ public class FormaPagamentoController {
                 .body(formaPagamentoModelDTO);
     }
 
+    @CheckSecurity.FormasPagamento.PodeEditar
     @Transactional
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -98,6 +102,7 @@ public class FormaPagamentoController {
         return formaPagamentoModelDTOAssembler.toModel(formaPagamento);
     }
 
+    @CheckSecurity.FormasPagamento.PodeEditar
     @Transactional
     @PutMapping("/{formaPagamentoId}")
     public FormaPagamentoModelDTO alterar(@Valid @RequestBody FormaPagamentoInputDTO formaPagamentoInputDTO, @PathVariable Long formaPagamentoId) {
@@ -108,6 +113,7 @@ public class FormaPagamentoController {
         return formaPagamentoModelDTOAssembler.toModel(formaPagamento);
     }
 
+    @CheckSecurity.FormasPagamento.PodeEditar
     @Transactional
     @DeleteMapping("/{formaPagamentoId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)

@@ -1,5 +1,6 @@
 package com.algaworks.algafood.api.v1.controller;
 
+import com.algaworks.algafood.core.security.CheckSecurity;
 import com.algaworks.algafood.domain.service.PedidoFluxoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,7 @@ public class PedidoFluxoController {
     @Autowired
     private PedidoFluxoService pedidoFluxoService;
 
+    @CheckSecurity.Pedidos.PodeGerenciarPedidos
     @Transactional
     @PutMapping("/confirmacao")
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -22,6 +24,7 @@ public class PedidoFluxoController {
         return ResponseEntity.noContent().build();
     }
 
+    @CheckSecurity.Pedidos.PodeGerenciarPedidos
     @Transactional
     @PutMapping("/entrega")
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -30,6 +33,7 @@ public class PedidoFluxoController {
         return ResponseEntity.noContent().build();
     }
 
+    @CheckSecurity.Pedidos.PodeGerenciarPedidos
     @Transactional
     @PutMapping("/cancelamento")
     @ResponseStatus(HttpStatus.NO_CONTENT)

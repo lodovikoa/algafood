@@ -2,6 +2,7 @@ package com.algaworks.algafood.api.v1.controller;
 
 import com.algaworks.algafood.api.v1.assembler.PermissaoModelDTOAssembler;
 import com.algaworks.algafood.api.v1.dto.model.PermissaoModelDTO;
+import com.algaworks.algafood.core.security.CheckSecurity;
 import com.algaworks.algafood.domain.service.PermissaoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
@@ -20,6 +21,7 @@ public class PermissaoController {
     @Autowired
     private PermissaoModelDTOAssembler permissaoModelDTOAssembler;
 
+    @CheckSecurity.UsuariosGruposPermissoes.PodeConsultar
     @GetMapping
     public CollectionModel<PermissaoModelDTO> listar() {
         var todasPermissoes = permissaoService.findAll();

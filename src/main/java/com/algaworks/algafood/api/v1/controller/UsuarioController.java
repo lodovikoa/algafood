@@ -6,6 +6,7 @@ import com.algaworks.algafood.api.v1.dto.input.UsuarioComSenhaInputDTO;
 import com.algaworks.algafood.api.v1.dto.input.UsuarioInputDTO;
 import com.algaworks.algafood.api.v1.dto.input.UsuarioSenhaInputDTO;
 import com.algaworks.algafood.api.v1.dto.model.UsuarioModelDTO;
+import com.algaworks.algafood.core.security.CheckSecurity;
 import com.algaworks.algafood.domain.service.UsuarioService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,18 +28,21 @@ public class UsuarioController {
     @Autowired
     private UsuarioInputDTODisassembler usuarioInputDisassembler;
 
+    @CheckSecurity.UsuariosGruposPermissoes.PodeConsultar
     @GetMapping
     public CollectionModel<UsuarioModelDTO> listar() {
         var usuarios = usuarioService.listar();
         return usuarioModelDTOAssembler.toCollectionModel(usuarios);
     }
 
+    @CheckSecurity.UsuariosGruposPermissoes.PodeConsultar
     @GetMapping("/{usuarioId}")
     public UsuarioModelDTO buscarPorId(@PathVariable Long usuarioId) {
         var usuario = usuarioService.buscarOuFalhar(usuarioId);
         return usuarioModelDTOAssembler.toModel(usuario);
     }
 
+    @CheckSecurity.UsuariosGruposPermissoes.PodeEditar
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Transactional
     @DeleteMapping("/{usuarioId}")
@@ -46,6 +50,7 @@ public class UsuarioController {
         usuarioService.excluir(usuarioId);
     }
 
+    @CheckSecurity.UsuariosGruposPermissoes.PodeEditar
     @Transactional
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
@@ -56,6 +61,7 @@ public class UsuarioController {
         return usuarioModelDTOAssembler.toModel(usuario);
     }
 
+    @CheckSecurity.UsuariosGruposPermissoes.PodeAlterarusuario
     @Transactional
     @PutMapping("/{usuarioId}")
     public UsuarioModelDTO atualizar(@PathVariable Long usuarioId, @RequestBody @Valid UsuarioInputDTO usuarioInputDTO) {
@@ -66,6 +72,7 @@ public class UsuarioController {
         return usuarioModelDTOAssembler.toModel(usuarioAtual);
     }
 
+    @CheckSecurity.UsuariosGruposPermissoes.PodeAlterarPropriaSenha
     @Transactional
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PutMapping("/{usuarioId}/senha")
