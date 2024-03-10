@@ -156,4 +156,8 @@ public class RestauranteService {
     public List<Restaurante> findAll() {
         return restauranteRespository.findAll();
     }
+
+    public boolean existeResponsavel(Long restauranteId, Long usuarioId) {
+        return restauranteRespository.existsResponsavel(restauranteId, usuarioId);
+    }
 }

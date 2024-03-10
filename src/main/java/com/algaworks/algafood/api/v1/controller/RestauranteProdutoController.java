@@ -5,6 +5,7 @@ import com.algaworks.algafood.api.v1.assembler.ProdutoModelDTOAssembler;
 import com.algaworks.algafood.api.v1.dto.input.ProdutoInputDTO;
 import com.algaworks.algafood.api.v1.dto.model.ProdutoModelDTO;
 import com.algaworks.algafood.api.v1.AlgaLinks;
+import com.algaworks.algafood.core.security.CheckSecurity;
 import com.algaworks.algafood.domain.model.Produto;
 import com.algaworks.algafood.domain.service.ProdutoService;
 import com.algaworks.algafood.domain.service.RestauranteService;
@@ -33,6 +34,7 @@ public class RestauranteProdutoController {
     @Autowired
     private AlgaLinks algaLinks;
 
+    @CheckSecurity.Restaurantes.PodeConsultar
     @GetMapping
     public CollectionModel<ProdutoModelDTO> listar(@PathVariable Long restauranteId, @RequestParam(required = false) Boolean incluirInativos) {
         var restaurante = restauranteService.buscarOuFalhar(restauranteId);
@@ -42,12 +44,14 @@ public class RestauranteProdutoController {
         return produtoModelDTOAssembler.toCollectionModel(todosProdutos).add(algaLinks.linkToProdutos(restauranteId));
     }
 
+    @CheckSecurity.Restaurantes.PodeConsultar
     @GetMapping("/{produtoId}")
     public ProdutoModelDTO buscarProdutoPorRestaurante(@PathVariable Long restauranteId, @PathVariable Long produtoId) {
         var produto = produtoService.buscarOuFalhar(restauranteId, produtoId);
         return produtoModelDTOAssembler.toModel(produto);
     }
 
+    @CheckSecurity.Restaurantes.PodeGerenciarFuncionamento
     @Transactional
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -60,6 +64,7 @@ public class RestauranteProdutoController {
         return produtoModelDTOAssembler.toModel(produto);
     }
 
+    @CheckSecurity.Restaurantes.PodeGerenciarFuncionamento
     @Transactional
     @PutMapping("/{produtoId}")
     public ProdutoModelDTO atualizarProdutoDoRestaurante(@PathVariable Long restauranteId, @PathVariable Long produtoId, @RequestBody @Valid ProdutoInputDTO produtoInputDTO) {

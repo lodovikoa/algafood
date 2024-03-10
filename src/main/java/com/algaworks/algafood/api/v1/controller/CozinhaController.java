@@ -5,6 +5,7 @@ import com.algaworks.algafood.api.v1.assembler.CozinhaModelDTOAssembler;
 import com.algaworks.algafood.api.v1.dto.input.CozinhaInputDTO;
 import com.algaworks.algafood.api.v1.dto.model.CozinhaModelDTO;
 import com.algaworks.algafood.api.v1.openapi.controller.CozinhaControllerOpenApi;
+import com.algaworks.algafood.core.security.CheckSecurity;
 import com.algaworks.algafood.domain.model.Cozinha;
 import com.algaworks.algafood.domain.repository.CozinhaRepository;
 import com.algaworks.algafood.domain.service.CozinhaService;
@@ -42,6 +43,7 @@ public class CozinhaController implements CozinhaControllerOpenApi {
     @Autowired
     private PagedResourcesAssembler<Cozinha> pagedResourcesAssembler;
 
+    @CheckSecurity.Cozinhas.PodeConsultar
     @GetMapping
     public PagedModel<CozinhaModelDTO> listar(@PageableDefault(size = 10) Pageable pageable) {
 

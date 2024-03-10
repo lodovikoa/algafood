@@ -3,6 +3,7 @@ package com.algaworks.algafood.api.v1.controller;
 import com.algaworks.algafood.api.v1.assembler.UsuarioModelDTOAssembler;
 import com.algaworks.algafood.api.v1.dto.model.UsuarioModelDTO;
 import com.algaworks.algafood.api.v1.AlgaLinks;
+import com.algaworks.algafood.core.security.CheckSecurity;
 import com.algaworks.algafood.domain.service.RestauranteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
@@ -23,6 +24,7 @@ public class RestauranteUsuarioResponsavelController {
     @Autowired
     private AlgaLinks algaLinks;
 
+    @CheckSecurity.Restaurantes.PodeConsultar
     @GetMapping
     public CollectionModel<UsuarioModelDTO> listar(@PathVariable Long restauranteId) {
         var restaurante = restauranteService.buscarOuFalhar(restauranteId);
@@ -38,6 +40,7 @@ public class RestauranteUsuarioResponsavelController {
         return usuariosModelDTO;
     }
 
+    @CheckSecurity.Restaurantes.PodeGerenciarCadastro
     @Transactional
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{usuarioId}")
@@ -46,6 +49,7 @@ public class RestauranteUsuarioResponsavelController {
         return ResponseEntity.noContent().build();
     }
 
+    @CheckSecurity.Restaurantes.PodeGerenciarCadastro
     @Transactional
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PutMapping("/{usuarioId}")

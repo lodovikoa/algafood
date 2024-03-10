@@ -8,6 +8,7 @@ import com.algaworks.algafood.api.v1.dto.input.RestauranteInputDTO;
 import com.algaworks.algafood.api.v1.dto.model.RestauranteApenasNomeModelDTO;
 import com.algaworks.algafood.api.v1.dto.model.RestauranteBasicoModelDTO;
 import com.algaworks.algafood.api.v1.dto.model.RestauranteModelDTO;
+import com.algaworks.algafood.core.security.CheckSecurity;
 import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
 import com.algaworks.algafood.domain.exception.NegocioException;
 import com.algaworks.algafood.domain.model.Restaurante;
@@ -44,24 +45,26 @@ public class RestauranteController {
     @Autowired
     RestauranteApenasNomeModelDTOAssembler restauranteApenasNomeModelDTOAssembler;
 
-    // @JsonView(RestauranteView.Resumo.class)
+    @CheckSecurity.Restaurantes.PodeConsultar
     @GetMapping
     public CollectionModel<RestauranteBasicoModelDTO> listar() {
         return restauranteBasicoModelDTOAssembler.toCollectionModel(restauranteService.findAll());
     }
 
-    // @JsonView(RestauranteView.ApenasNome.class)
+    @CheckSecurity.Restaurantes.PodeConsultar
     @GetMapping(params = "projecao=apenas-nome")
     public CollectionModel<RestauranteApenasNomeModelDTO> listarApenasNome() {
         return restauranteApenasNomeModelDTOAssembler.toCollectionModel(restauranteService.findAll());
     }
 
+    @CheckSecurity.Restaurantes.PodeConsultar
     @GetMapping(value = "{restauranteId}")
     public RestauranteModelDTO buscar(@PathVariable Long restauranteId) {
 
         return restauranteModelDtoAssembler.toModel(restauranteService.buscarOuFalhar(restauranteId));
     }
 
+    @CheckSecurity.Restaurantes.PodeGerenciarCadastro
     @Transactional
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -75,6 +78,7 @@ public class RestauranteController {
         }
     }
 
+    @CheckSecurity.Restaurantes.PodeGerenciarCadastro
     @Transactional
     @PutMapping(value = "{restauranteId}")
     public RestauranteModelDTO alterar(@PathVariable Long restauranteId, @RequestBody @Valid RestauranteInputDTO restauranteInputDTO) {
@@ -88,12 +92,14 @@ public class RestauranteController {
 
     }
 
+    @CheckSecurity.Restaurantes.PodeGerenciarCadastro
     @Transactional
     @PatchMapping("/{restauranteId}")
     public RestauranteModelDTO atualizarParcial(@PathVariable Long restauranteId, @RequestBody Map<String, Object> campos, HttpServletRequest request) {
         return restauranteModelDtoAssembler.toModel(restauranteService.atualizarParcial(restauranteId, campos, request));
     }
 
+    @CheckSecurity.Restaurantes.PodeGerenciarCadastro
     @Transactional
     @PutMapping("/{restauranteId}/ativo")
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -102,6 +108,7 @@ public class RestauranteController {
         return ResponseEntity.noContent().build();
     }
 
+    @CheckSecurity.Restaurantes.PodeGerenciarCadastro
     @Transactional
     @DeleteMapping("/{restauranteId}/ativo")
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -110,6 +117,7 @@ public class RestauranteController {
         return ResponseEntity.noContent().build();
     }
 
+    @CheckSecurity.Restaurantes.PodeGerenciarCadastro
     @Transactional
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PutMapping("/ativacoes")
@@ -117,6 +125,7 @@ public class RestauranteController {
         restauranteService.ativacoes(restauranteIds);
     }
 
+    @CheckSecurity.Restaurantes.PodeGerenciarCadastro
     @Transactional
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/inativacoes")
@@ -124,6 +133,7 @@ public class RestauranteController {
         restauranteService.inativacoes(restauranteIds);
     }
 
+    @CheckSecurity.Restaurantes.PodeGerenciarFuncionamento
     @Transactional
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PutMapping("/{restauranteId}/abertura")
@@ -132,6 +142,7 @@ public class RestauranteController {
         return ResponseEntity.noContent().build();
     }
 
+    @CheckSecurity.Restaurantes.PodeGerenciarFuncionamento
     @Transactional
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PutMapping("/{restauranteId}/fechamento")
