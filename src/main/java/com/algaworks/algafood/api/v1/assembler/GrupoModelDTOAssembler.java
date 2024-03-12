@@ -3,6 +3,7 @@ package com.algaworks.algafood.api.v1.assembler;
 import com.algaworks.algafood.api.v1.controller.GrupoController;
 import com.algaworks.algafood.api.v1.dto.model.GrupoModelDTO;
 import com.algaworks.algafood.api.v1.AlgaLinks;
+import com.algaworks.algafood.core.security.AlgaSecurity;
 import com.algaworks.algafood.domain.model.Grupo;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,9 @@ public class GrupoModelDTOAssembler extends RepresentationModelAssemblerSupport<
     @Autowired
     private AlgaLinks algaLinks;
 
+    @Autowired
+    private AlgaSecurity algaSecurity;
+
     public GrupoModelDTOAssembler() {
         super(GrupoController.class, GrupoModelDTO.class);
     }
@@ -28,21 +32,22 @@ public class GrupoModelDTOAssembler extends RepresentationModelAssemblerSupport<
         var grupoModelDTO = createModelWithId(grupo.getId(), grupo);
         modelMapper.map(grupo, grupoModelDTO);
 
-        grupoModelDTO.add(algaLinks.linkToGrupos("grupos"));
-        grupoModelDTO.add(algaLinks.linkToGrupoPermissoes(grupo.getId(), "permissoes"));
+        if(algaSecurity.podeConsultarUsuariosGruposPermissoes()) {
+            grupoModelDTO.add(algaLinks.linkToGrupos("grupos"));
+            grupoModelDTO.add(algaLinks.linkToGrupoPermissoes(grupo.getId(), "permissoes"));
+        }
 
         return grupoModelDTO;
     }
 
     @Override
     public CollectionModel<GrupoModelDTO> toCollectionModel(Iterable<? extends Grupo> entities) {
-        return super.toCollectionModel(entities).add(algaLinks.linkToGrupos());
+        var collectionModel = super.toCollectionModel(entities);
+
+        if(algaSecurity.podeConsultarUsuariosGruposPermissoes()) {
+            collectionModel.add(algaLinks.linkToGrupos());
+        }
+
+        return collectionModel;
     }
-
-
-    //    public List<GrupoModelDTO> toCollectionModel(Collection<Grupo> grupos) {
-//        return grupos.stream()
-//                .map(grupo -> dtoModel(grupo))
-//                .collect(Collectors.toList());
-//    }
 }

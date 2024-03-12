@@ -31,10 +31,11 @@ public class PedidoModelDTOAssembler extends RepresentationModelAssemblerSupport
         var pedidoModelDTO = createModelWithId(pedido.getCodigo(), pedido);
         modelMapper.map(pedido, pedidoModelDTO);
 
-        pedidoModelDTO.add(algaLinks.linkToPedidos("pedidos"));
+        if(algaSecurity.podePesquisarPedidos()) {
+            pedidoModelDTO.add(algaLinks.linkToPedidos("pedidos"));
+        }
 
         if(algaSecurity.podeGerenciarPedidos(pedido.getCodigo())) {
-
             if (pedido.podeSerConfirmado())
                 pedidoModelDTO.add(algaLinks.linkToPedidoConfirmacao(pedido.getCodigo(), "confirmar"));
 
@@ -45,16 +46,29 @@ public class PedidoModelDTOAssembler extends RepresentationModelAssemblerSupport
                 pedidoModelDTO.add(algaLinks.linkToPedidoEntrega(pedido.getCodigo(), "entregar"));
         }
 
-        pedidoModelDTO.getRestaurante().add(algaLinks.linkToRestaurante(pedido.getRestaurante().getId()));
-        pedidoModelDTO.getCliente().add(algaLinks.linkToUsuario(pedido.getCliente().getId()));
+        if(algaSecurity.podeConsultarRestaurantes()) {
+            pedidoModelDTO.getRestaurante().add(algaLinks.linkToRestaurante(pedido.getRestaurante().getId()));
+        }
 
-        // Passamos null no segundo argumento porque é indiferente para a construção da URL do recurso de forma de pagamento
-        pedidoModelDTO.getFormaPagamento().add(algaLinks.linkToFormasPagamento(pedido.getFormaPagamento().getId()));
-        pedidoModelDTO.getEnderecoEntrega().getCidade().add(algaLinks.linkToCidade(pedido.getEnderecoEntrega().getCidade().getId()));
+        if(algaSecurity.podeConsultarUsuariosGruposPermissoes()) {
+            pedidoModelDTO.getCliente().add(algaLinks.linkToUsuario(pedido.getCliente().getId()));
+        }
 
-        pedidoModelDTO.getItens().forEach(item -> {
-            item.add(algaLinks.linkToItens(pedidoModelDTO.getRestaurante().getId(), item.getProdutoId(), "produto"));
-        });
+        if(algaSecurity.podeConsultarFormasPagamento()) {
+            // Passamos null no segundo argumento porque é indiferente para a construção da URL do recurso de forma de pagamento
+            pedidoModelDTO.getFormaPagamento().add(algaLinks.linkToFormasPagamento(pedido.getFormaPagamento().getId()));
+        }
+
+        if(algaSecurity.podeConsultarCidades()) {
+            pedidoModelDTO.getEnderecoEntrega().getCidade().add(algaLinks.linkToCidade(pedido.getEnderecoEntrega().getCidade().getId()));
+        }
+
+        // Quem pode consultar restaurantes também pode consultar os produtos dos restaurantes
+        if(algaSecurity.podeConsultarRestaurantes()) {
+            pedidoModelDTO.getItens().forEach(item -> {
+                item.add(algaLinks.linkToItens(pedidoModelDTO.getRestaurante().getId(), item.getProdutoId(), "produto"));
+            });
+        }
 
         return pedidoModelDTO;
     }

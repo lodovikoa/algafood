@@ -3,6 +3,7 @@ package com.algaworks.algafood.api.v1.assembler;
 import com.algaworks.algafood.api.v1.controller.EstadoController;
 import com.algaworks.algafood.api.v1.dto.model.EstadoModelDTO;
 import com.algaworks.algafood.api.v1.AlgaLinks;
+import com.algaworks.algafood.core.security.AlgaSecurity;
 import com.algaworks.algafood.domain.model.Estado;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,9 @@ public class EstadoModelDTOAssembler extends RepresentationModelAssemblerSupport
     @Autowired
     private AlgaLinks algaLinks;
 
+    @Autowired
+    private AlgaSecurity algaSecurity;
+
     public EstadoModelDTOAssembler() {
         super(EstadoController.class, EstadoModelDTO.class);
     }
@@ -27,13 +31,22 @@ public class EstadoModelDTOAssembler extends RepresentationModelAssemblerSupport
         var estadoModelDTO = createModelWithId(estado.getId(), estado);
         modelMapper.map(estado, estadoModelDTO);
 
-        estadoModelDTO.add(algaLinks.linkToEstado("estados"));
+        if(algaSecurity.podeConsultarEstados()) {
+            estadoModelDTO.add(algaLinks.linkToEstado("estados"));
+        }
+
         return estadoModelDTO;
     }
 
     @Override
     public CollectionModel<EstadoModelDTO> toCollectionModel(Iterable<? extends Estado> entities) {
-        return super.toCollectionModel(entities).add(algaLinks.linktoEstado());
+        var collectionModel = super.toCollectionModel(entities);
+
+        if(algaSecurity.podeConsultarEstados()) {
+            collectionModel.add(algaLinks.linktoEstado());
+        }
+
+        return collectionModel;
     }
 
 }

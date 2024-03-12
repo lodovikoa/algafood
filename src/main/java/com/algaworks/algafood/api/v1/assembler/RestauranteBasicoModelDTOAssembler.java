@@ -3,6 +3,7 @@ package com.algaworks.algafood.api.v1.assembler;
 import com.algaworks.algafood.api.v1.controller.RestauranteController;
 import com.algaworks.algafood.api.v1.dto.model.RestauranteBasicoModelDTO;
 import com.algaworks.algafood.api.v1.AlgaLinks;
+import com.algaworks.algafood.core.security.AlgaSecurity;
 import com.algaworks.algafood.domain.model.Restaurante;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,10 @@ public class RestauranteBasicoModelDTOAssembler extends RepresentationModelAssem
 
     @Autowired
     private AlgaLinks algaLinks;
+
+    @Autowired
+    private AlgaSecurity algaSecurity;
+
     public RestauranteBasicoModelDTOAssembler() {
         super(RestauranteController.class, RestauranteBasicoModelDTO.class);
     }
@@ -27,14 +32,24 @@ public class RestauranteBasicoModelDTOAssembler extends RepresentationModelAssem
         var restauranteModel = createModelWithId(restaurante.getId(), restaurante);
         modelMapper.map(restauranteModel, restauranteModel);
 
-        restauranteModel.add(algaLinks.linkToRestaurante("restaurantes"));
-        restauranteModel.getCozinha().add(algaLinks.linkToCozinha(restaurante.getId()));
+        if(algaSecurity.podeConsultarRestaurantes()) {
+            restauranteModel.add(algaLinks.linkToRestaurante("restaurantes"));
+        }
+        if(algaSecurity.podeConsultarCozinhas()) {
+            restauranteModel.getCozinha().add(algaLinks.linkToCozinha(restaurante.getId()));
+        }
 
         return restauranteModel;
     }
 
     @Override
     public CollectionModel<RestauranteBasicoModelDTO> toCollectionModel(Iterable<? extends Restaurante> entities) {
-        return super.toCollectionModel(entities).add(algaLinks.linkToRestaurante());
+        var collectionModel = super.toCollectionModel(entities);
+
+        if(algaSecurity.podeConsultarRestaurantes()) {
+            collectionModel.add(algaLinks.linkToRestaurante());
+        }
+
+        return collectionModel;
     }
 }

@@ -3,6 +3,7 @@ package com.algaworks.algafood.api.v1.controller;
 import com.algaworks.algafood.api.v1.assembler.PermissaoModelDTOAssembler;
 import com.algaworks.algafood.api.v1.dto.model.PermissaoModelDTO;
 import com.algaworks.algafood.api.v1.AlgaLinks;
+import com.algaworks.algafood.core.security.AlgaSecurity;
 import com.algaworks.algafood.core.security.CheckSecurity;
 import com.algaworks.algafood.domain.service.GrupoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,19 +26,26 @@ public class GrupoPermissaoController {
     @Autowired
     private PermissaoModelDTOAssembler permissaoModelDTOAssembler;
 
+    @Autowired
+    private AlgaSecurity algaSecurity;
+
     @CheckSecurity.UsuariosGruposPermissoes.PodeConsultar
     @GetMapping
     public CollectionModel<PermissaoModelDTO> listar(@PathVariable Long grupoId) {
         var grupo = grupoService.buscarOuFalhar(grupoId);
         var permissaoModel = permissaoModelDTOAssembler
                 .toCollectionModel(grupo.getPermissoes())
-                .removeLinks()
-                .add(algaLinks.linkToGrupoPermissoes(grupoId))
-                .add(algaLinks.linkToGrupoPermissaoAssociacao(grupoId, "associar"));
+                .removeLinks();
 
-        permissaoModel.getContent().forEach(pModel -> {
-            pModel.add(algaLinks.linkToGrupoPermissaoDesassociacao(grupoId, pModel.getId(), "desassociar"));
-        });
+        permissaoModel.add(algaLinks.linkToGrupoPermissoes(grupoId));
+
+        if(algaSecurity.podeEditarUsuariosGruposPermissoes()) {
+            permissaoModel.add(algaLinks.linkToGrupoPermissaoAssociacao(grupoId, "associar"));
+
+            permissaoModel.getContent().forEach(pModel -> {
+                pModel.add(algaLinks.linkToGrupoPermissaoDesassociacao(grupoId, pModel.getId(), "desassociar"));
+            });
+        }
 
         return permissaoModel;
     }

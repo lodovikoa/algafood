@@ -3,6 +3,7 @@ package com.algaworks.algafood.api.v1.controller;
 import com.algaworks.algafood.api.v1.assembler.FormaPagamentoModelDTOAssembler;
 import com.algaworks.algafood.api.v1.dto.model.FormaPagamentoModelDTO;
 import com.algaworks.algafood.api.v1.AlgaLinks;
+import com.algaworks.algafood.core.security.AlgaSecurity;
 import com.algaworks.algafood.core.security.CheckSecurity;
 import com.algaworks.algafood.domain.service.RestauranteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,19 +25,26 @@ public class RestauranteFormasPagamentoController {
     @Autowired
     private AlgaLinks algaLinks;
 
+    @Autowired
+    private AlgaSecurity algaSecurity;
+
     @CheckSecurity.Restaurantes.PodeConsultar
     @GetMapping
     public CollectionModel<FormaPagamentoModelDTO> listar(@PathVariable Long restauranteId) {
         var restaurante = restauranteService.buscarOuFalhar(restauranteId);
         var formaPagamentoModel = formaPagamentoModelDTOAssembler
                 .toCollectionModel(restaurante.getFormaPagamentos())
-                .removeLinks()
-                .add(algaLinks.linkToRestauranteFormasPagamento(restauranteId))
-                .add(algaLinks.linkToRestauranteFormasPagamentoAssociar(restauranteId, "associar"));
+                .removeLinks();
 
-        formaPagamentoModel.getContent().forEach(fpm -> {
-            fpm.add(algaLinks.linkToRestauranteFormasPagamentoDesassociacao(restauranteId, fpm.getId(), "desassociar"));
-        });
+        formaPagamentoModel.add(algaLinks.linkToRestauranteFormasPagamento(restauranteId));
+
+        if(algaSecurity.podeGerenciarFuncionamentoRestaurantes(restauranteId)) {
+            formaPagamentoModel.add(algaLinks.linkToRestauranteFormasPagamentoAssociar(restauranteId, "associar"));
+
+            formaPagamentoModel.getContent().forEach(fpm -> {
+                fpm.add(algaLinks.linkToRestauranteFormasPagamentoDesassociacao(restauranteId, fpm.getId(), "desassociar"));
+            });
+        }
 
         return formaPagamentoModel;
     }

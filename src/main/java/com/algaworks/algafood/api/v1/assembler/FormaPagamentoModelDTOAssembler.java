@@ -3,6 +3,7 @@ package com.algaworks.algafood.api.v1.assembler;
 import com.algaworks.algafood.api.v1.controller.FormaPagamentoController;
 import com.algaworks.algafood.api.v1.dto.model.FormaPagamentoModelDTO;
 import com.algaworks.algafood.api.v1.AlgaLinks;
+import com.algaworks.algafood.core.security.AlgaSecurity;
 import com.algaworks.algafood.domain.model.FormaPagamento;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,9 @@ public class FormaPagamentoModelDTOAssembler extends RepresentationModelAssemble
     @Autowired
     private AlgaLinks algaLinks;
 
+    @Autowired
+    private AlgaSecurity algaSecurity;
+
     public FormaPagamentoModelDTOAssembler() {
         super(FormaPagamentoController.class, FormaPagamentoModelDTO.class);
     }
@@ -28,19 +32,21 @@ public class FormaPagamentoModelDTOAssembler extends RepresentationModelAssemble
         var formaPagamentoModelDTO = createModelWithId(formaPagamento.getId(), formaPagamento);
         modelMapper.map(formaPagamento, formaPagamentoModelDTO);
 
-        formaPagamentoModelDTO.add(algaLinks.linkToFormasPagamento("formasPagamento"));
+        if(algaSecurity.podeConsultarFormasPagamento()) {
+            formaPagamentoModelDTO.add(algaLinks.linkToFormasPagamento("formasPagamento"));
+        }
 
         return formaPagamentoModelDTO;
     }
 
     @Override
     public CollectionModel<FormaPagamentoModelDTO> toCollectionModel(Iterable<? extends FormaPagamento> entities) {
-        return super.toCollectionModel(entities).add(algaLinks.linkToFormasPagamento());
-    }
+        var collectionModel = super.toCollectionModel(entities);
 
-    //    public List<FormaPagamentoModelDTO> toCollectionModel(Collection<FormaPagamento> formaPagamentos) {
-//        return formaPagamentos.stream()
-//                .map(formaPagamento -> toModel(formaPagamento))
-//                .collect(Collectors.toList());
-//    }
+        if(algaSecurity.podeConsultarFormasPagamento()) {
+            collectionModel.add(algaLinks.linkToFormasPagamento());
+        }
+
+        return collectionModel;
+    }
 }
