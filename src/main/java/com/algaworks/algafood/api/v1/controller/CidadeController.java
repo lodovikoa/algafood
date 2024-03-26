@@ -33,14 +33,14 @@ public class CidadeController implements CidadeControllerOpenApi {
     private CidadeInputDTODisassembler cidadeInputDTODisassembler;
 
 
-    @CheckSecurity.Estados.PodeConsultar
+    // @CheckSecurity.Estados.PodeConsultar
     @GetMapping
     public CollectionModel<CidadeModelDTO> listar() {
         var todasCidades = cidadeService.listar();
         return cidadeModelDTOAssembler.toCollectionModel(todasCidades);
     }
 
-    @CheckSecurity.Estados.PodeConsultar
+    // @CheckSecurity.Estados.PodeConsultar
     @GetMapping("{cidadeId}")
     public CidadeModelDTO buscar(@PathVariable Long cidadeId) {
         var cidade = cidadeService.buscarOuFalhar(cidadeId);

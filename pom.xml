@@ -19,6 +19,7 @@
 		<jasperreports.version>6.20.6</jasperreports.version>
 		<aws-java-sdk-s3.version>1.12.643</aws-java-sdk-s3.version>
 		<springdoc-openapi-starter-webmvc-ui-version>2.3.0</springdoc-openapi-starter-webmvc-ui-version>
+		<java-jwt.version>4.4.0</java-jwt.version>
 	</properties>
 	<dependencies>
 
@@ -133,9 +134,16 @@
 			<version>${springdoc-openapi-starter-webmvc-ui-version}</version>
 		</dependency>
 
+		<!-- https://github.com/auth0/java-jwt -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.auth0</groupId>
+			<artifactId>java-jwt</artifactId>
+			<version>${java-jwt.version}</version>
 		</dependency>
 
 	</dependencies>

@@ -7,6 +7,8 @@ import com.algaworks.algafood.domain.exception.UsuarioNaoEncontradoException;
 import com.algaworks.algafood.domain.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +30,8 @@ public class UsuarioService {
     public List<Usuario> listar () {
         return usuarioRepository.findAll();
     }
+
+    
 
     public Usuario salvar (Usuario usuario) {
 
@@ -81,4 +85,15 @@ public class UsuarioService {
 
         usuario.adicionarGrupo(grupo);
     }
+
+    public UserDetails findByEmail(String email) {
+        UserDetails usuario = usuarioRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado com e-mail informado"));
+
+        return usuario ;
+    }
+
+//    public Usuario findByEmailFetchGrupos(String username) {
+//        return usuarioRepository.findByEmailFetchGrupos(username);
+//    }
+
 }

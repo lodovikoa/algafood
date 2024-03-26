@@ -21,6 +21,7 @@ import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,7 +44,8 @@ public class CozinhaController implements CozinhaControllerOpenApi {
     @Autowired
     private PagedResourcesAssembler<Cozinha> pagedResourcesAssembler;
 
-    @CheckSecurity.Cozinhas.PodeConsultar
+    // @CheckSecurity.Cozinhas.PodeConsultar
+  //  @PreAuthorize("hasRole('CONSULTAR_COZINHAS')")
     @GetMapping
     public PagedModel<CozinhaModelDTO> listar(@PageableDefault(size = 10) Pageable pageable) {
 
