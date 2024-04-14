@@ -33,12 +33,14 @@ public class WebSecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.POST, "/v1/auth/login").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/hostcheck").permitAll()
+                        // .requestMatchers(HttpMethod.GET, "/swagger-ui/**").permitAll()
 
                         // Cozinhas
                         .requestMatchers(HttpMethod.GET, "/v1/cozinhas/**").hasRole("CONSULTAR_COZINHAS")
                         .requestMatchers(HttpMethod.POST, "/v1/cozinhas/*").hasRole("EDITAR_COZINHAS")
 
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll()
                         //.anyRequest().denyAll()
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)

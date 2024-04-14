@@ -1,0 +1,49 @@
+version: "3.9"
+
+networks:
+  algafood-network:
+    driver: bridge
+
+services:
+  algafood-mysql:
+    image: mysql:8.3
+    # command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: "Mysqlteste"
+    ports:
+      - "13306:3306"
+    networks:
+      - algafood-network
+
+  algafood-redis:
+    image: redis:7.2.4-alpine
+    networks:
+      - algafood-network
+
+  algafood-api:
+    image: algafood-api
+    command: ["/wait-for-it.sh", "algafood-mysql:3306", "-t", "30", "--", "java", "-jar", "api.jar"]
+    environment:
+      DB_HOST: algafood-mysql
+      DB_USER: root
+      DB_PASSWORD: Mysqlteste
+      EMAIL_PASSWORD: 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
+      S3_CHAVE: AKIA47CRW5LLSATM7FG6
+      S3_SECRETA: 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
+      PROFILE_ACTIVE: dev
+ #   ports:
+ #     - "8080:8081"
+    networks:
+      - algafood-network
+    depends_on:
+      - algafood-mysql
+
+  algafood-proxy:
+    build: ./nginx
+    image: algafood-proxy
+    ports:
+      - "80:80"
+    networks:
+      - algafood-network
+    depends_on:
+      - algafood-api
