@@ -8,6 +8,7 @@ import com.algaworks.algafood.api.v1.dto.input.RestauranteInputDTO;
 import com.algaworks.algafood.api.v1.dto.model.RestauranteApenasNomeModelDTO;
 import com.algaworks.algafood.api.v1.dto.model.RestauranteBasicoModelDTO;
 import com.algaworks.algafood.api.v1.dto.model.RestauranteModelDTO;
+import com.algaworks.algafood.api.v1.openapi.controller.RestauranteControllerOpenApi;
 import com.algaworks.algafood.core.security.CheckSecurity;
 import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
 import com.algaworks.algafood.domain.exception.NegocioException;
@@ -28,7 +29,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/v1/restaurantes", produces = MediaType.APPLICATION_JSON_VALUE)
-public class RestauranteController {
+public class RestauranteController implements RestauranteControllerOpenApi {
 
     @Autowired
     private RestauranteService restauranteService;

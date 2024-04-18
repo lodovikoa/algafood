@@ -3,6 +3,7 @@ package com.algaworks.algafood.api.v1.controller;
 import com.algaworks.algafood.api.v1.assembler.FotoProdutoModelDTOAssembler;
 import com.algaworks.algafood.api.v1.dto.input.FotoProdutoInput;
 import com.algaworks.algafood.api.v1.dto.model.FotoProdutoModelDTO;
+import com.algaworks.algafood.api.v1.openapi.controller.RestauranteProdutoFotoControllerOpenApi;
 import com.algaworks.algafood.core.security.CheckSecurity;
 import com.algaworks.algafood.domain.model.FotoProduto;
 import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
@@ -26,7 +27,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/v1/restaurantes/{restauranteId}/produtos/{produtoId}/foto")
-public class RestauranteProdutoFotoController {
+public class RestauranteProdutoFotoController implements RestauranteProdutoFotoControllerOpenApi {
 
     // https://aws.amazon.com/pt/s3/
 
