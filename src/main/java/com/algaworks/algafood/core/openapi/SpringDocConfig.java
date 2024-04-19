@@ -53,7 +53,9 @@ public class SpringDocConfig {
                         Arrays.asList(
                                 new Tag().name("Cidades").description("Gerenciar as cidades"),
                                 new Tag().name("Grupos").description("Gerenciar grupos de usuários"),
-                                new Tag().name("Cozinhas").description("Gerenciar as cozinhas")
+                                new Tag().name("Cozinhas").description("Gerenciar as cozinhas"),
+                                new Tag().name("produtos").description("Produtos de um restaurante"),
+                                new Tag().name("Restaurantes").description("Restaurantes")
                         )
                 )
                 .components(new Components().schemas(this.gerarSchemas())

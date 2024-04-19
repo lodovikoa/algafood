@@ -5,6 +5,8 @@ import com.algaworks.algafood.api.v1.assembler.ProdutoModelDTOAssembler;
 import com.algaworks.algafood.api.v1.dto.input.ProdutoInputDTO;
 import com.algaworks.algafood.api.v1.dto.model.ProdutoModelDTO;
 import com.algaworks.algafood.api.v1.AlgaLinks;
+import com.algaworks.algafood.api.v1.openapi.controller.RestauranteProdutoControllerOpenApi;
+import com.algaworks.algafood.api.v1.openapi.controller.RestauranteProdutoFotoControllerOpenApi;
 import com.algaworks.algafood.core.security.CheckSecurity;
 import com.algaworks.algafood.domain.model.Produto;
 import com.algaworks.algafood.domain.service.ProdutoService;
@@ -20,7 +22,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/v1/restaurantes/{restauranteId}/produtos")
-public class RestauranteProdutoController {
+public class RestauranteProdutoController implements RestauranteProdutoControllerOpenApi {
 
     @Autowired
     private ProdutoService produtoService;
