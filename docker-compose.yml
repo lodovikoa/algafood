@@ -26,10 +26,10 @@ services:
     environment:
       DB_HOST: algafood-mysql
       DB_USER: root
-      DB_PASSWORD: Mysqlteste
-      EMAIL_PASSWORD: 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
-      S3_CHAVE: AKIA47CRW5LLSATM7FG6
-      S3_SECRETA: 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
+      DB_PASSWORD: 
+      EMAIL_PASSWORD: 
+      S3_CHAVE: 
+      S3_SECRETA: 
       PROFILE_ACTIVE: dev
  #   ports:
  #     - "8080:8081"
